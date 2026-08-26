@@ -1,0 +1,70 @@
+@extends('layouts.admin')
+
+@section('title', 'Edit Team Member')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Edit Team Member</h4>
+    <a href="{{ route('admin.team-members.index') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+</div>
+<div class="content-card">
+    <div class="card-body">
+        <form method="POST" action="{{ route('admin.team-members.update', $member->id) }}" enctype="multipart/form-data">
+            @csrf @method('PUT')
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Name *</label>
+                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" required value="{{ old('name', $member->name) }}">
+                    @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Title *</label>
+                    <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" required value="{{ old('title', $member->title) }}">
+                    @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Designation *</label>
+                    <input type="text" name="designation" class="form-control @error('designation') is-invalid @enderror" required value="{{ old('designation', $member->designation) }}">
+                    @error('designation')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Category *</label>
+                    <select name="category" class="form-select" required>
+                        <option value="tribunal_member" {{ old('category', $member->category) == 'tribunal_member' ? 'selected' : '' }}>Tribunal Member</option>
+                        <option value="management" {{ old('category', $member->category) == 'management' ? 'selected' : '' }}>Management</option>
+                        <option value="secretariat" {{ old('category', $member->category) == 'secretariat' ? 'selected' : '' }}>Secretariat</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email', $member->email) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="text" name="phone" class="form-control" value="{{ old('phone', $member->phone) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Photo <small class="text-muted">(leave blank to keep current)</small></label>
+                    @if($member->photo)<div class="mb-2"><img src="{{ asset($member->photo) }}" style="height:60px;" class="rounded"></div>@endif
+                    <input type="file" name="photo" class="form-control" accept="image/*">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Display Order</label>
+                    <input type="number" name="display_order" class="form-control" value="{{ old('display_order', $member->display_order) }}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Bio</label>
+                    <textarea name="bio" class="form-control" rows="4">{{ old('bio', $member->bio) }}</textarea>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_active" class="form-check-input" id="is_active" value="1" {{ old('is_active', $member->is_active) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                <div class="col-12"><button type="submit" class="btn btn-admin-primary">Update Member</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
