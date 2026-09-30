@@ -48,7 +48,27 @@
                         <label class="form-check-label" for="is_published">Published</label>
                     </div>
                 </div>
+                                {{-- Swahili (Kiswahili) fields --}}
+                <div class="col-12 mt-3 pt-3 border-top">
+                    <h6 class="text-muted mb-0"><i class="bi bi-translate me-1"></i> Kiswahili (hiari — English itaonyeshwa kama wazi)</h6>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Kichwa (Kiswahili)</label>
+                    <input type="text" name="title_sw" class="form-control" value="{{ old('title_sw') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Mahali (Kiswahili)</label>
+                    <input type="text" name="location_sw" class="form-control" value="{{ old('location_sw') }}">
+                </div>
                 <div class="col-12">
+                    <label class="form-label">Muhtasari (Kiswahili)</label>
+                    <textarea name="excerpt_sw" class="form-control" rows="2">{{ old('excerpt_sw') }}</textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Yaliyomo (Kiswahili)</label>
+                    <textarea name="content_sw" class="form-control" rows="10">{{ old('content_sw') }}</textarea>
+                </div>
+<div class="col-12">
                     <button type="submit" class="btn btn-admin-primary">Create News</button>
                 </div>
             </div>

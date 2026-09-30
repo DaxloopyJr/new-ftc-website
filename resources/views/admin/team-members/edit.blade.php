@@ -62,7 +62,27 @@
                         <label class="form-check-label" for="is_active">Active</label>
                     </div>
                 </div>
-                <div class="col-12"><button type="submit" class="btn btn-admin-primary">Update Member</button></div>
+                                {{-- Swahili (Kiswahili) fields --}}
+                <div class="col-12 mt-3 pt-3 border-top">
+                    <h6 class="text-muted mb-0"><i class="bi bi-translate me-1"></i> Kiswahili (hiari — English itaonyeshwa kama wazi)</h6>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Jina (Kiswahili)</label>
+                    <input type="text" name="name_sw" class="form-control" value="{{ old('name_sw', $member->name_sw ?? '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Cheo (Kiswahili)</label>
+                    <input type="text" name="title_sw" class="form-control" value="{{ old('title_sw', $member->title_sw ?? '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Nafasi (Kiswahili)</label>
+                    <input type="text" name="designation_sw" class="form-control" value="{{ old('designation_sw', $member->designation_sw ?? '') }}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Wasifu (Kiswahili)</label>
+                    <textarea name="bio_sw" class="form-control" rows="4">{{ old('bio_sw', $member->bio_sw ?? '') }}</textarea>
+                </div>
+<div class="col-12"><button type="submit" class="btn btn-admin-primary">Update Member</button></div>
             </div>
         </form>
     </div>

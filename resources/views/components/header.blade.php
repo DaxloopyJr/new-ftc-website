@@ -75,20 +75,25 @@
                 @endphp
 
                 @foreach($headerPages ?? [] as $page)
+                    @php
+                        $childSlugs = $page->children->pluck('slug')->filter()->values()->all();
+                        $isParentActive = request()->is($page->slug)
+                            || (!empty($childSlugs) && request()->is($childSlugs));
+                    @endphp
                     @if($page->children->count() > 0)
-                        <li class="nav-item dropdown {{ request()->is($page->slug . '*') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle {{ request()->is($page->slug . '*') ? 'active' : '' }}" href="{{ route('pages.show', $page->slug) }}" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-{{ $page->slug }}">
-                                {{ strtolower($page->title) }}
+                        <li class="nav-item dropdown {{ $isParentActive ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle {{ $isParentActive ? 'active' : '' }}" href="{{ route('pages.show', $page->slug) }}" role="button" data-bs-toggle="dropdown" aria-expanded="{{ $isParentActive ? 'true' : 'false' }}" id="dropdown-{{ $page->slug }}">
+                                {{ strtolower($page->getField('title')) }}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown-{{ $page->slug }}">
                                 @foreach($page->children as $child)
-                                    <li><a class="dropdown-item {{ request()->is($child->slug) ? 'active' : '' }}" href="{{ route('pages.show', $child->slug) }}">{{ strtolower($child->title) }}</a></li>
+                                    <li><a class="dropdown-item {{ request()->is($child->slug) ? 'active' : '' }}" href="{{ route('pages.show', $child->slug) }}">{{ strtolower($child->getField('title')) }}</a></li>
                                 @endforeach
                             </ul>
                         </li>
                     @else
                         <li class="nav-item {{ request()->is($page->slug) ? 'active' : '' }}">
-                            <a class="nav-link {{ request()->is($page->slug) ? 'active' : '' }}" href="{{ route('pages.show', $page->slug) }}" aria-current="{{ request()->is($page->slug) ? 'page' : 'false' }}">{{ strtolower($page->title) }}</a>
+                            <a class="nav-link {{ request()->is($page->slug) ? 'active' : '' }}" href="{{ route('pages.show', $page->slug) }}" aria-current="{{ request()->is($page->slug) ? 'page' : 'false' }}">{{ strtolower($page->getField('title')) }}</a>
                         </li>
                     @endif
                 @endforeach

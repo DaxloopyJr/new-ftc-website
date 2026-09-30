@@ -9,17 +9,22 @@ use Illuminate\Support\Str;
 class NewsEvent extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $table = 'news_events';
 
     protected $fillable = [
         'title',
+        'title_sw',
         'slug',
         'excerpt',
+        'excerpt_sw',
         'content',
+        'content_sw',
         'featured_image',
         'event_date',
         'location',
+        'location_sw',
         'is_published',
         'view_count',
         'published_at',

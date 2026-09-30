@@ -26,6 +26,8 @@ class MediaGalleryController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'title_sw' => 'nullable|string|max:255',
+            'description_sw' => 'nullable|string',
             'file' => 'required|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:51200',
             'file_type' => 'required|in:image,video',
             'category' => 'required|in:photo_gallery,video_gallery',
@@ -33,7 +35,7 @@ class MediaGalleryController extends Controller
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'description', 'file_type', 'category', 'is_featured', 'is_published']);
+        $data = $request->only(['title', 'title_sw', 'description', 'description_sw', 'file_type', 'category', 'is_featured', 'is_published']);
         $data['created_by'] = auth()->id();
 
         if ($request->hasFile('file')) {
@@ -58,6 +60,8 @@ class MediaGalleryController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'title_sw' => 'nullable|string|max:255',
+            'description_sw' => 'nullable|string',
             'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:51200',
             'file_type' => 'required|in:image,video',
             'category' => 'required|in:photo_gallery,video_gallery',
@@ -65,7 +69,7 @@ class MediaGalleryController extends Controller
             'is_published' => 'boolean',
         ]);
 
-        $data = $request->only(['title', 'description', 'file_type', 'category', 'is_featured', 'is_published']);
+        $data = $request->only(['title', 'title_sw', 'description', 'description_sw', 'file_type', 'category', 'is_featured', 'is_published']);
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();

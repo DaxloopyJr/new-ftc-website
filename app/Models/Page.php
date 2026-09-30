@@ -10,11 +10,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Page extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $fillable = [
         'title',
+        'title_sw',
         'slug',
         'content',
+        'content_sw',
         'meta_description',
         'meta_keywords',
         'is_published',

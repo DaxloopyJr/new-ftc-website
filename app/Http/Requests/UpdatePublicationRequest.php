@@ -24,6 +24,8 @@ class UpdatePublicationRequest extends FormRequest
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'year' => 'nullable|integer|min:2000|max:' . (date('Y') + 1),
             'is_published' => 'boolean',
+            'title_sw' => 'nullable|string|max:255',
+            'description_sw' => 'nullable|string',
         ];
     }
 }

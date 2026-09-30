@@ -24,6 +24,10 @@ class UpdateNewsRequest extends FormRequest
             'event_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'is_published' => 'boolean',
+            'title_sw' => 'nullable|string|max:255',
+            'excerpt_sw' => 'nullable|string',
+            'content_sw' => 'nullable|string',
+            'location_sw' => 'nullable|string|max:255',
         ];
     }
 }

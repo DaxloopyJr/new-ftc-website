@@ -24,6 +24,8 @@ class UpdatePageRequest extends FormRequest
             'parent_id' => 'nullable|exists:pages,id',
             'sort_order' => 'nullable|integer',
             'is_published' => 'boolean',
+            'title_sw' => 'nullable|string|max:255',
+            'content_sw' => 'nullable|string',
         ];
     }
 }

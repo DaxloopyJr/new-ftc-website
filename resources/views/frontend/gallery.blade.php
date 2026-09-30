@@ -48,14 +48,14 @@
                 <article class="col-lg-3 col-md-4 col-6">
                     <div class="card border-0 shadow-sm overflow-hidden">
                         @if($item->file_type == 'image')
-                            <img src="{{ asset($item->file_path) }}" class="card-img-top" alt="{{ $item->title }}" style="height:200px;object-fit:cover;" loading="lazy">
+                            <img src="{{ asset($item->file_path) }}" class="card-img-top" alt="{{ $item->getField('title') }}" style="height:200px;object-fit:cover;" loading="lazy">
                         @else
-                            <div class="d-flex align-items-center justify-content-center" style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $item->title }}">
+                            <div class="d-flex align-items-center justify-content-center" style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $item->getField('title') }}">
                                 <i class="bi bi-play-circle-fill text-white fs-1" aria-hidden="true"></i>
                             </div>
                         @endif
                         <div class="card-body p-2 text-center">
-                            <small class="text-muted">{{ $item->title }}</small>
+                            <small class="text-muted">{{ $item->getField('title') }}</small>
                         </div>
                     </div>
                 </article>

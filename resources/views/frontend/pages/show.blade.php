@@ -1,8 +1,8 @@
 @extends('layouts.frontend')
 
-@section('title', $page->title . ' | Fair Competition Tribunal')
-@section('meta_description', $page->meta_description ?? Str::limit(strip_tags($page->content), 160))
-@section('meta_keywords', $page->meta_keywords ?? 'FCT, Fair Competition Tribunal, Tanzania, ' . $page->title)
+@section('title', $page->getField('title') . ' | Fair Competition Tribunal')
+@section('meta_description', $page->meta_description ?? Str::limit(strip_tags($page->getField('content')), 160))
+@section('meta_keywords', $page->meta_keywords ?? 'FCT, Fair Competition Tribunal, Tanzania, ' . $page->getField('title'))
 @section('og_type', 'article')
 
 @section('structured_data')
@@ -10,8 +10,8 @@
 {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "{{ $page->title }} - Fair Competition Tribunal",
-    "description": "{{ Str::limit(strip_tags($page->meta_description ?? $page->content), 160) }}",
+    "name": "{{ $page->getField('title') }} - Fair Competition Tribunal",
+    "description": "{{ Str::limit(strip_tags($page->meta_description ?? $page->getField('content')), 160) }}",
     "url": "{{ route('pages.show', $page->slug) }}",
     "dateModified": "{{ $page->updated_at->toIso8601String() }}",
     "isPartOf": {
@@ -27,40 +27,40 @@
 <!-- Page Header -->
 <section class="breadcrumb-fct" aria-label="{{ app()->getLocale() == 'sw' ? 'Kichwa cha Ukurasa' : 'Page Header' }}">
     <div class="container py-4">
-        <h1 style="font-size:2rem;">{{ $page->title }}</h1>
+        <h1 style="font-size:2rem;">{{ $page->getField('title') }}</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ __('messages.home') }}</a></li>
                 @if($page->parent)
                     <li class="breadcrumb-item"><a href="{{ route('pages.show', $page->parent->slug) }}">{{ $page->parent->title }}</a></li>
                 @endif
-                <li class="breadcrumb-item active" aria-current="page">{{ $page->title }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $page->getField('title') }}</li>
             </ol>
         </nav>
     </div>
 </section>
 
 <!-- Page Content -->
-<section class="py-5" aria-label="{{ $page->title }}">
+<section class="py-5" aria-label="{{ $page->getField('title') }}">
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
                 <article class="card border-0 shadow-sm">
                     <div class="card-body p-4 p-lg-5">
-                        {!! $page->content !!}
+                        {!! $page->getField('content') !!}
                     </div>
                 </article>
             </div>
             <aside class="col-lg-4" aria-label="{{ app()->getLocale() == 'sw' ? 'Ukurasa wa pili' : 'Sidebar' }}">
                 @if($page->children && $page->children->count() > 0)
-                    <nav class="card border-0 shadow-sm mb-4" aria-label="{{ $page->title }} {{ app()->getLocale() == 'sw' ? 'chini' : 'children' }}">
+                    <nav class="card border-0 shadow-sm mb-4" aria-label="{{ $page->getField('title') }} {{ app()->getLocale() == 'sw' ? 'chini' : 'children' }}">
                         <div class="card-header bg-white" style="border-bottom:2px solid var(--fct-primary);">
-                            <h5 class="mb-0 fct-primary-text">{{ $page->title }}</h5>
+                            <h5 class="mb-0 fct-primary-text">{{ $page->getField('title') }}</h5>
                         </div>
                         <div class="list-group list-group-flush">
                             @foreach($page->children as $child)
                                 <a href="{{ route('pages.show', $child->slug) }}" class="list-group-item list-group-item-action {{ request()->is($child->slug) ? 'active' : '' }}">
-                                    <i class="bi bi-chevron-right me-2" style="font-size:0.75rem;" aria-hidden="true"></i>{{ $child->title }}
+                                    <i class="bi bi-chevron-right me-2" style="font-size:0.75rem;" aria-hidden="true"></i>{{ $child->getField('title') }}
                                 </a>
                             @endforeach
                         </div>
@@ -73,7 +73,7 @@
                         <div class="list-group list-group-flush">
                             @foreach($page->parent->children as $sibling)
                                 <a href="{{ route('pages.show', $sibling->slug) }}" class="list-group-item list-group-item-action {{ $sibling->id === $page->id ? 'active' : '' }}">
-                                    <i class="bi bi-chevron-right me-2" style="font-size:0.75rem;" aria-hidden="true"></i>{{ $sibling->title }}
+                                    <i class="bi bi-chevron-right me-2" style="font-size:0.75rem;" aria-hidden="true"></i>{{ $sibling->getField('title') }}
                                 </a>
                             @endforeach
                         </div>

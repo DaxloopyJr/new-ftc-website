@@ -16,6 +16,10 @@ class UpdateTeamMemberRequest extends FormRequest
             'phone' => 'nullable|string|max:50',
             'display_order' => 'nullable|integer',
             'is_active' => 'boolean',
+            'name_sw' => 'nullable|string|max:255',
+            'title_sw' => 'nullable|string|max:255',
+            'designation_sw' => 'nullable|string|max:255',
+            'bio_sw' => 'nullable|string',
         ];
     }
 }

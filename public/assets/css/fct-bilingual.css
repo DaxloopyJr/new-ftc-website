@@ -1,0 +1,88 @@
+/* ============================================================
+   FCT bilingual + hero slider redesign overrides
+   ============================================================ */
+
+/* ---------- Nav: parent highlighted when child is active ---------- */
+.navbar-fct .nav-item.active > .nav-link,
+.navbar-fct .nav-link.active {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.18);
+    border-radius: .375rem;
+}
+.navbar-fct .dropdown-menu .dropdown-item.active {
+    background-color: var(--fct-primary, #1a5632);
+    color: #fff;
+}
+
+/* ---------- Dynamic slides (2+): two-sided split layout ---------- */
+.hero-split-slide .hero-slide-item { position: relative; overflow: hidden; }
+
+.hero-split-wrap { display: flex; min-height: 480px; height: 100%; }
+.hero-split-image { flex: 0 0 50%; position: relative; overflow: hidden; }
+.hero-split-image img.hero-split-bg {
+    width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.12);
+    transition: transform 1.4s cubic-bezier(.22,.61,.36,1);
+}
+.hero-split-caption {
+    flex: 0 0 50%;
+    display: flex; align-items: center;
+    padding: 3rem 4rem;
+    background: linear-gradient(135deg, var(--fct-primary, #1a5632), var(--fct-primary-dark, #0f3a21));
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+.hero-split-caption h1 { color:#fff; font-size:2.2rem; margin-bottom:1rem; }
+.hero-split-caption p  { color:rgba(255,255,255,.85); font-size:1.05rem; }
+
+/* ---------- Leadership portraits: hidden, appear on hover, BIGGER ---------- */
+.hero-split-leaders {
+    position: absolute; right: 1.5rem; bottom: 1.5rem;
+    display: flex; gap: 1rem; z-index: 5; pointer-events: none;
+}
+.hero-split-leaders .leader-card {
+    opacity: 0; transform: translateY(30px) scale(.92);
+    transition: opacity .5s ease, transform .5s ease;
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem; padding: .9rem; text-align: center; width: 185px;
+}
+.hero-split-slide:hover .hero-split-leaders .leader-card {
+    opacity: 1; transform: translateY(0) scale(1);
+}
+.hero-split-leaders .leader-card:nth-child(2) { transition-delay: .08s; }
+.hero-split-leaders .leader-circle {
+    width: 150px; height: 150px; border-radius: 50%; overflow: hidden;
+    margin: 0 auto .6rem; background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+}
+.hero-split-leaders .leader-circle img { width: 150px; height: 150px; object-fit: cover; }
+.hero-split-leaders .leader-name { color:#fff; font-size:.85rem; font-weight:600; margin:0; }
+.hero-split-leaders .leader-role { color:#fff; opacity:.75; font-size:.72rem; }
+
+/* ---------- Overlap transition: top image wipes away revealing the one beneath ---------- */
+.hero-split-slide.overlap-in .hero-split-image img.hero-split-bg {
+    animation: fctOverlap 1.2s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes fctOverlap {
+    0%   { clip-path: inset(0 0 0 0); opacity: 1; }
+    65%  { clip-path: inset(0 0 0 0); opacity: 1; }
+    100% { clip-path: inset(0 0 0 100%); opacity: 0; }
+}
+/* caption staggers in as the image lifts away */
+.hero-split-slide .hero-split-caption > * {
+    opacity: 0; transform: translateX(40px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+.hero-split-slide.active .hero-split-caption > * { opacity: 1; transform: none; }
+.hero-split-slide.active .hero-split-caption > *:nth-child(2) { transition-delay: .15s; }
+.hero-split-slide.active .hero-split-caption > *:nth-child(3) { transition-delay: .3s; }
+
+@media (max-width: 991px) {
+    .hero-split-wrap { flex-direction: column; }
+    .hero-split-image, .hero-split-caption { flex: 0 0 auto; }
+    .hero-split-image { height: 260px; }
+    .hero-split-caption { padding: 2rem; }
+    .hero-split-leaders { position: static; padding: 0 1rem 1rem; pointer-events: auto; }
+}

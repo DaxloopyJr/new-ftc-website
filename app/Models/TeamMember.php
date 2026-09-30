@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class TeamMember extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $fillable = [
         'name',
+        'name_sw',
         'title',
+        'title_sw',
         'designation',
+        'designation_sw',
         'bio',
+        'bio_sw',
         'photo',
         'category',
         'email',

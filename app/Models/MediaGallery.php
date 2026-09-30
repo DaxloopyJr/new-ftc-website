@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class MediaGallery extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $table = 'media_gallery';
 
     protected $fillable = [
         'title',
+        'title_sw',
         'description',
+        'description_sw',
         'file_path',
         'file_type',
         'category',

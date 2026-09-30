@@ -20,7 +20,7 @@
                 "@type": "ListItem",
                 "position": {{ $index + 1 }},
                 "url": "{{ route('news.show', $item->slug) }}",
-                "name": "{{ $item->title }}"
+                "name": "{{ $item->getField('title') }}"
             }@if(!$loop->last),@endif
             @endforeach
         ]
@@ -51,9 +51,9 @@
                 <article class="col-lg-4 col-md-6">
                     <div class="news-card h-100">
                         @if($item->featured_image)
-                            <img src="{{ asset($item->featured_image) }}" alt="{{ $item->title }}" loading="lazy">
+                            <img src="{{ asset($item->featured_image) }}" alt="{{ $item->getField('title') }}" loading="lazy">
                         @else
-                            <div style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));display:flex;align-items:center;justify-content:center;" role="img" aria-label="{{ $item->title }}">
+                            <div style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));display:flex;align-items:center;justify-content:center;" role="img" aria-label="{{ $item->getField('title') }}">
                                 <i class="bi bi-newspaper text-white fs-1" aria-hidden="true"></i>
                             </div>
                         @endif
@@ -61,8 +61,8 @@
                             <time class="date-badge d-block" datetime="{{ $item->published_at ? $item->published_at->format('Y-m-d') : '' }}">
                                 <i class="bi bi-calendar3 me-1" aria-hidden="true"></i> {{ $item->published_at ? $item->published_at->format('F j, Y') : '' }}
                             </time>
-                            <h5>{{ $item->title }}</h5>
-                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit(strip_tags($item->excerpt ?? $item->content), 120) }}</p>
+                            <h5>{{ $item->getField('title') }}</h5>
+                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit(strip_tags($item->getField('excerpt') ?: $item->getField('content')), 120) }}</p>
                             <a href="{{ route('news.show', $item->slug) }}" class="btn btn-sm btn-fct-primary">{{ __('messages.read_more_btn') }}</a>
                         </div>
                     </div>

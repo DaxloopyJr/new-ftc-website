@@ -60,16 +60,16 @@
                         <article class="col-lg-4 col-md-6">
                             <div class="card h-100 border-0 shadow-sm text-center">
                                 <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->name }}">
+                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
                                         @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
+                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
                                         @else
                                             <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
                                         @endif
                                     </div>
-                                    <h5 class="mb-1">{{ $member->name }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->title }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->designation }}</p>
+                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
+                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
+                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
                                     @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
                                 </div>
                             </div>
@@ -88,16 +88,16 @@
                         <article class="col-lg-4 col-md-6">
                             <div class="card h-100 border-0 shadow-sm text-center">
                                 <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->name }}">
+                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
                                         @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
+                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
                                         @else
                                             <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
                                         @endif
                                     </div>
-                                    <h5 class="mb-1">{{ $member->name }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->title }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->designation }}</p>
+                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
+                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
+                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
                                     @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
                                 </div>
                             </div>
@@ -116,16 +116,16 @@
                         <article class="col-lg-4 col-md-6">
                             <div class="card h-100 border-0 shadow-sm text-center">
                                 <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->name }}">
+                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
                                         @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
+                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
                                         @else
                                             <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
                                         @endif
                                     </div>
-                                    <h5 class="mb-1">{{ $member->name }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->title }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->designation }}</p>
+                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
+                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
+                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
                                     @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
                                 </div>
                             </div>

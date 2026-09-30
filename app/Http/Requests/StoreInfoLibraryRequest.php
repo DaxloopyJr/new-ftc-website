@@ -15,6 +15,8 @@ class StoreInfoLibraryRequest extends FormRequest
             'parties' => 'nullable|string|max:500',
             'decision_date' => 'nullable|date',
             'is_published' => 'boolean',
+            'title_sw' => 'nullable|string|max:255',
+            'description_sw' => 'nullable|string',
         ];
     }
 }

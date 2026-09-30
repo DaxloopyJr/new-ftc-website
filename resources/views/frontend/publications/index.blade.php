@@ -20,7 +20,7 @@
                 "@type": "ListItem",
                 "position": {{ $index + 1 }},
                 "url": "{{ route('publications.show', $pub->slug) }}",
-                "name": "{{ $pub->title }}"
+                "name": "{{ $pub->getField('title') }}"
             }@if(!$loop->last),@endif
             @endforeach
         ]
@@ -65,8 +65,8 @@
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <span class="badge" style="background:var(--fct-primary);font-size:0.7rem;">{{ $pub->category_label }}</span>
-                            <h5 class="mt-2 mb-2" style="font-size:1rem;">{{ $pub->title }}</h5>
-                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit($pub->description, 100) }}</p>
+                            <h5 class="mt-2 mb-2" style="font-size:1rem;">{{ $pub->getField('title') }}</h5>
+                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit($pub->getField('description'), 100) }}</p>
                             @if($pub->year)<small class="text-muted d-block mb-2">{{ app()->getLocale() == 'sw' ? 'Mwaka' : 'Year' }}: {{ $pub->year }}</small>@endif
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <span class="text-muted" style="font-size:0.75rem;"><i class="bi bi-download me-1" aria-hidden="true"></i>{{ $pub->download_count }} {{ app()->getLocale() == 'sw' ? 'vipakuzi' : 'downloads' }}</span>

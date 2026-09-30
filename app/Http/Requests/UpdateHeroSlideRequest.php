@@ -13,6 +13,9 @@ class UpdateHeroSlideRequest extends FormRequest
             'button_link' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer',
             'is_active' => 'boolean',
+            'title_sw' => 'nullable|string|max:255',
+            'subtitle_sw' => 'nullable|string|max:255',
+            'button_text_sw' => 'nullable|string|max:100',
         ];
     }
 }

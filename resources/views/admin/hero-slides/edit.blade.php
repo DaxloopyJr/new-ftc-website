@@ -44,7 +44,23 @@
                         <label class="form-check-label" for="is_active">Active</label>
                     </div>
                 </div>
-                <div class="col-12"><button type="submit" class="btn btn-admin-primary">Update Slide</button></div>
+                                {{-- Swahili (Kiswahili) fields --}}
+                <div class="col-12 mt-3 pt-3 border-top">
+                    <h6 class="text-muted mb-0"><i class="bi bi-translate me-1"></i> Kiswahili (hiari — English itaonyeshwa kama wazi)</h6>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Kichwa (Kiswahili)</label>
+                    <input type="text" name="title_sw" class="form-control" value="{{ old('title_sw', $slide->title_sw ?? '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Kichwa Kidogo (Kiswahili)</label>
+                    <input type="text" name="subtitle_sw" class="form-control" value="{{ old('subtitle_sw', $slide->subtitle_sw ?? '') }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Maelezo ya Kitufe (Kiswahili)</label>
+                    <input type="text" name="button_text_sw" class="form-control" value="{{ old('button_text_sw', $slide->button_text_sw ?? '') }}">
+                </div>
+<div class="col-12"><button type="submit" class="btn btn-admin-primary">Update Slide</button></div>
             </div>
         </form>
     </div>

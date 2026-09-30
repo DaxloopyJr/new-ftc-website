@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Advertisement extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $fillable = [
         'title',
+        'title_sw',
         'image_path',
         'link_url',
         'position',

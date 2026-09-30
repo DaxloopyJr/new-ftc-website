@@ -20,7 +20,7 @@
                 "@type": "ListItem",
                 "position": {{ $index + 1 }},
                 "url": "{{ route('info-library.show', $item->slug) }}",
-                "name": "{{ $item->title }}"
+                "name": "{{ $item->getField('title') }}"
             }@if(!$loop->last),@endif
             @endforeach
         ]
@@ -76,14 +76,14 @@
                         @forelse($items as $item)
                             <tr>
                                 <td>
-                                    <strong>{{ $item->title }}</strong>
+                                    <strong>{{ $item->getField('title') }}</strong>
                                     @if($item->parties)<br><small class="text-muted">{{ $item->parties }}</small>@endif
                                 </td>
                                 <td><span class="badge" style="background:var(--fct-primary);">{{ $item->category_label }}</span></td>
                                 <td>{{ $item->case_number ?? '-' }}</td>
                                 <td><time datetime="{{ $item->decision_date ? $item->decision_date->format('Y-m-d') : '' }}">{{ $item->decision_date ? $item->decision_date->format('M j, Y') : '-' }}</time></td>
                                 <td>
-                                    <a href="{{ route('info-library.download', $item->slug) }}" class="btn btn-sm btn-fct-primary" aria-label="{{ __('messages.download') }} {{ $item->title }}"><i class="bi bi-download" aria-hidden="true"></i></a>
+                                    <a href="{{ route('info-library.download', $item->slug) }}" class="btn btn-sm btn-fct-primary" aria-label="{{ __('messages.download') }} {{ $item->getField('title') }}"><i class="bi bi-download" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                         @empty

@@ -37,8 +37,8 @@
     "@context": "https://schema.org",
     "@type": "ImageObject",
     "contentUrl": "{{ asset($slide->image_path) }}",
-    "description": "{{ $slide->title }}",
-    "name": "{{ $slide->title }}"
+    "description": "{{ $slide->getField('title') }}",
+    "name": "{{ $slide->getField('title') }}"
 }
 </script>
 @endforeach
@@ -50,7 +50,7 @@
     $totalSlides = 1 + $heroSlides->count(); // 1 fixed slide + dynamic slides
 @endphp
 <section class="hero-section" aria-label="{{ app()->getLocale() == 'sw' ? 'Sehemu Kuu' : 'Hero Section' }}">
-    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" aria-roledescription="carousel" aria-label="{{ app()->getLocale() == 'sw' ? 'Vipande vya Kichwa' : 'Hero Slides' }}">
+    <div id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" aria-roledescription="carousel" aria-label="{{ app()->getLocale() == 'sw' ? 'Vipande vya Kichwa' : 'Hero Slides' }}">
 
         {{-- Carousel Indicators --}}
         @if($totalSlides > 1)
@@ -59,7 +59,7 @@
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="{{ app()->getLocale() == 'sw' ? 'Mfumo wa Kufungua Kesi' : 'Digital Case Filing System' }}"></button>
             {{-- Indicators for dynamic slides (indices 1+) --}}
             @foreach($heroSlides as $index => $slide)
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index + 1 }}" aria-label="{{ $slide->title ?? ('Slide ' . ($index + 2)) }}"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index + 1 }}" aria-label="{{ $slide->getField('title') ?? ('Slide ' . ($index + 2)) }}"></button>
             @endforeach
         </div>
         @endif
@@ -150,76 +150,68 @@
             {{-- ========================================= --}}
             @foreach($heroSlides as $index => $slide)
             <div class="carousel-item">
-                <div class="hero-slide-item">
-                    {{-- Background Image --}}
-                    <img src="{{ asset($slide->image_path) }}" class="slide-bg-image" alt="{{ $slide->title }}" loading="lazy">
-                    {{-- Dark Overlay for text contrast --}}
+                <div class="hero-slide-item hero-split-slide">
                     <div class="slide-overlay"></div>
-                    {{-- Caption Content --}}
-                    <div class="slide-content">
-                        <div class="container">
-                            <div class="row align-items-center">
-                                <div class="col-lg-7">
-                                    <article class="slide-caption">
-                                        <h1>{{ $slide->title }}</h1>
-                                        <p>{{ $slide->subtitle }}</p>
-                                        <div class="btn-group-slides">
-                                            @if($slide->button_text && $slide->button_link)
-                                                <a href="{{ $slide->button_link }}" class="btn btn-slide-action btn-lg">
-                                                    <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
-                                                    {{ $slide->button_text }}
-                                                </a>
+                    <div class="slide-content" style="position:relative;width:100%;">
+                        <div class="hero-split-wrap">
+                            {{-- Left: image --}}
+                            <div class="hero-split-image">
+                                <img src="{{ asset($slide->image_path) }}" class="hero-split-bg"
+                                     alt="{{ $slide->getField('title') }}" loading="lazy">
+
+                                {{-- Leadership portraits: hidden by default, appear on hover, larger --}}
+                                <div class="hero-split-leaders">
+                                    @if($chairperson)
+                                    <article class="leader-card">
+                                        <div class="leader-circle">
+                                            @if($chairperson->photo)
+                                                <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" loading="lazy">
                                             @else
-                                                <a href="{{ route('pages.show', 'about-us') }}" class="btn btn-slide-action btn-lg">
-                                                    <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
-                                                    {{ __('messages.learn_more') }}
-                                                </a>
+                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
                                             @endif
-                                            <a href="{{ route('pages.show', 'how-to-appeal') }}" class="btn btn-slide-outline btn-lg">
-                                                {{ app()->getLocale() == 'sw' ? 'Fungua Rufaa' : 'File an Appeal' }}
-                                            </a>
                                         </div>
+                                        <h6 class="leader-name">{{ $chairperson->name }}</h6>
+                                        <small class="leader-role">{{ $chairperson->getField('title') }}</small>
                                     </article>
-                                </div>
-                                {{-- Leadership Profiles (shown on dynamic slides too) --}}
-                                <div class="col-lg-5 d-none d-lg-block">
-                                    <aside class="row g-3" aria-label="{{ app()->getLocale() == 'sw' ? 'Viongozi' : 'Leadership' }}">
-                                        @if($chairperson)
-                                        <div class="col-6">
-                                            <article class="card border-0" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);">
-                                                <div class="card-body text-center text-white p-3">
-                                                    <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center overflow-hidden" style="width:130px;height:130px;background:rgba(255,255,255,0.15);">
-                                                        @if($chairperson->photo)
-                                                            <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" style="width:130px;height:130px;object-fit:cover;" loading="lazy">
-                                                        @else
-                                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                                        @endif
-                                                    </div>
-                                                    <h6 class="mb-0 text-white" style="font-size:0.8rem;font-weight:600;">{{ $chairperson->name }}</h6>
-                                                    <small class="text-white" style="opacity:0.75;font-size:0.7rem;">{{ $chairperson->title }}</small>
-                                                </div>
-                                            </article>
+                                    @endif
+                                    @if($registrar)
+                                    <article class="leader-card">
+                                        <div class="leader-circle">
+                                            @if($registrar->photo)
+                                                <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" loading="lazy">
+                                            @else
+                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
+                                            @endif
                                         </div>
-                                        @endif
-                                        @if($registrar)
-                                        <div class="col-6">
-                                            <article class="card border-0" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);">
-                                                <div class="card-body text-center text-white p-3">
-                                                    <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center overflow-hidden" style="width:130px;height:130px;background:rgba(255,255,255,0.15);">
-                                                        @if($registrar->photo)
-                                                            <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" style="width:130px;height:130px;object-fit:cover;" loading="lazy">
-                                                        @else
-                                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                                        @endif
-                                                    </div>
-                                                    <h6 class="mb-0 text-white" style="font-size:0.8rem;font-weight:600;">{{ $registrar->name }}</h6>
-                                                    <small class="text-white" style="opacity:0.75;font-size:0.7rem;">{{ $registrar->title }}</small>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        @endif
-                                    </aside>
+                                        <h6 class="leader-name">{{ $registrar->name }}</h6>
+                                        <small class="leader-role">{{ $registrar->getField('title') }}</small>
+                                    </article>
+                                    @endif
                                 </div>
+                            </div>
+
+                            {{-- Right: caption --}}
+                            <div class="hero-split-caption">
+                                <article class="slide-caption" style="max-width:100%;">
+                                    <h1>{{ $slide->getField('title') }}</h1>
+                                    <p>{{ $slide->getField('subtitle') }}</p>
+                                    <div class="btn-group-slides">
+                                        @if($slide->button_text && $slide->button_link)
+                                            <a href="{{ $slide->button_link }}" class="btn btn-slide-action btn-lg">
+                                                <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
+                                                {{ $slide->getField('button_text') }}
+                                            </a>
+                                        @else
+                                            <a href="{{ route('pages.show', 'about-us') }}" class="btn btn-slide-action btn-lg">
+                                                <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
+                                                {{ __('messages.learn_more') }}
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('pages.show', 'how-to-appeal') }}" class="btn btn-slide-outline btn-lg">
+                                            {{ app()->getLocale() == 'sw' ? 'Fungua Rufaa' : 'File an Appeal' }}
+                                        </a>
+                                    </div>
+                                </article>
                             </div>
                         </div>
                     </div>
@@ -302,9 +294,9 @@
                 <article class="col-lg-4 col-md-6">
                     <div class="news-card h-100">
                         @if($news->featured_image)
-                            <img src="{{ asset($news->featured_image) }}" alt="{{ $news->title }}" loading="lazy">
+                            <img src="{{ asset($news->featured_image) }}" alt="{{ $news->getField('title') }}" loading="lazy">
                         @else
-                            <div style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));display:flex;align-items:center;justify-content:center;" role="img" aria-label="{{ $news->title }}">
+                            <div style="height:200px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));display:flex;align-items:center;justify-content:center;" role="img" aria-label="{{ $news->getField('title') }}">
                                 <i class="bi bi-newspaper text-white fs-1" aria-hidden="true"></i>
                             </div>
                         @endif
@@ -312,8 +304,8 @@
                             <time class="date-badge d-block" datetime="{{ $news->published_at ? $news->published_at->format('Y-m-d') : '' }}">
                                 <i class="bi bi-calendar3 me-1" aria-hidden="true"></i> {{ $news->published_at ? $news->published_at->format('F j, Y') : '' }}
                             </time>
-                            <h5>{{ $news->title }}</h5>
-                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit(strip_tags($news->excerpt ?? $news->content), 120) }}</p>
+                            <h5>{{ $news->getField('title') }}</h5>
+                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit(strip_tags($news->getField('excerpt') ?: $news->getField('content')), 120) }}</p>
                             <a href="{{ route('news.show', $news->slug) }}" class="btn btn-sm btn-fct-primary">{{ __('messages.read_more_btn') }}</a>
                         </div>
                     </div>
@@ -424,7 +416,7 @@
                         <a href="{{ $ad->link_url ?? '#' }}" class="text-decoration-none">
                             <div class="card border-0" style="background: linear-gradient(135deg, var(--fct-primary), var(--fct-primary-dark)); border-radius: 8px;">
                                 <div class="card-body text-center text-white py-4">
-                                    <h4 class="mb-2">{{ $ad->title }}</h4>
+                                    <h4 class="mb-2">{{ $ad->getField('title') }}</h4>
                                     <p class="mb-0 opacity-75">{{ __('messages.click_learn_more') }}</p>
                                 </div>
                             </div>
@@ -436,4 +428,12 @@
     </div>
 </section>
 @endif
+@section('styles')
+<link href="{{ asset('assets/css/fct-bilingual.css') }}" rel="stylesheet">
+@endsection
+
+@section('scripts')
+<script src="{{ asset('assets/js/fct-hero.js') }}"></script>
+@endsection
+
 @endsection

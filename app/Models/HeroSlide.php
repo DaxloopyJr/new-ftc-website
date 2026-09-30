@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class HeroSlide extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $fillable = [
         'title',
+        'title_sw',
         'subtitle',
+        'subtitle_sw',
         'image_path',
         'button_text',
+        'button_text_sw',
         'button_link',
         'sort_order',
         'is_active',

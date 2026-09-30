@@ -9,11 +9,14 @@ use Illuminate\Support\Str;
 class Publication extends Model
 {
     use HasFactory;
+    use \App\Models\Concerns\Translatable;
 
     protected $fillable = [
         'title',
+        'title_sw',
         'slug',
         'description',
+        'description_sw',
         'file_path',
         'file_size',
         'file_type',
