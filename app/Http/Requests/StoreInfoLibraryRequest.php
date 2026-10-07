@@ -17,6 +17,10 @@ class StoreInfoLibraryRequest extends FormRequest
             'is_published' => 'boolean',
             'title_sw' => 'nullable|string|max:255',
             'description_sw' => 'nullable|string',
+            'registration_date' => 'nullable|date',
+            'case_type' => 'nullable|string|max:30|in:appeal,application',
+            'status' => 'nullable|string|max:30|in:Hearing,Mention,Judgement',
+            'issue' => 'nullable|string|max:255',
         ];
     }
 }

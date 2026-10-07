@@ -21,10 +21,14 @@ class SettingSeeder extends Seeder
             ['key' => 'social_instagram', 'value' => 'https://instagram.com/fcttanzania', 'group' => 'social', 'type' => 'text', 'label' => 'Instagram URL'],
             ['key' => 'office_hours', 'value' => 'Monday - Friday: 08:00 AM - 04:30 PM', 'group' => 'general', 'type' => 'text', 'label' => 'Office Hours'],
             ['key' => 'footer_copyright', 'value' => 'Fair Competition Tribunal. All Rights Reserved.', 'group' => 'general', 'type' => 'text', 'label' => 'Footer Copyright'],
+            ['key' => 'appearance_primary_color', 'value' => '#1B5E20', 'group' => 'appearance', 'type' => 'color', 'label' => 'Primary Color'],
+            ['key' => 'appearance_accent_color', 'value' => '#f5b301', 'group' => 'appearance', 'type' => 'color', 'label' => 'Accent Color'],
+            ['key' => 'appearance_skin', 'value' => 'light', 'group' => 'appearance', 'type' => 'select', 'label' => 'Website Skin']
         ];
 
         foreach ($settings as $setting) {
-            Setting::create($setting);
+            // Idempotent: keep any values the admin has already customized
+            Setting::firstOrCreate(['key' => $setting['key']], $setting);
         }
     }
 }

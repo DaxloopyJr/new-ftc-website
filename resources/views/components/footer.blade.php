@@ -49,7 +49,28 @@
                 <h5>{{ __('messages.contact_us') }}</h5>
                 <address class="mb-0">
                     <ul class="list-unstyled">
-                        <li class="mb-2"><i class="bi bi-geo-alt me-2" aria-hidden="true"></i> {{ $siteSettings['contact_address'] ?? (app()->getLocale() == 'sw' ? 'Dar es Salaam, Tanzania' : 'Dar es Salaam, Tanzania') }}</li>
+@php
+                            $officeLocations = \App\Models\OfficeLocation::active()->orderBy('sort_order')->orderBy('id')->get();
+                        @endphp
+                        @if($officeLocations->count())
+                            @foreach($officeLocations as $loc)
+                                <li class="mb-2">
+                                    <i class="bi bi-geo-alt me-2" aria-hidden="true"></i>
+                                    <strong>{{ $loc->name }}</strong><br>
+                                    <span class="small">{{ $loc->address }}</span><br>
+                                    @if($loc->phone)
+                                        <span class="small"><i class="bi bi-telephone me-1" aria-hidden="true"></i>{{ $loc->phone }}</span><br>
+                                    @endif
+                                    @if($loc->latitude && $loc->longitude)
+                                        <a class="btn btn-sm btn-outline-light mt-1" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir/?api=1&destination={{ $loc->latitude }},{{ $loc->longitude }}">
+                                            <i class="bi bi-geo me-1" aria-hidden="true"></i>{{ app()->getLocale() == 'sw' ? 'Nionyeshe' : 'Locate Me' }}
+                                        </a>
+                                    @endif
+                                </li>
+                            @endforeach
+                        @else
+                            <li class="mb-2"><i class="bi bi-geo-alt me-2" aria-hidden="true"></i> {{ $siteSettings['contact_address'] ?? 'Dar es Salaam, Tanzania' }}</li>
+                        @endif
                         <li class="mb-2"><i class="bi bi-telephone me-2" aria-hidden="true"></i> {{ $siteSettings['contact_phone'] ?? '' }}</li>
                         <li class="mb-2"><i class="bi bi-envelope me-2" aria-hidden="true"></i> <a href="mailto:{{ $siteSettings['contact_email'] ?? 'info@fct.go.tz' }}">{{ $siteSettings['contact_email'] ?? 'info@fct.go.tz' }}</a></li>
                         <li class="mb-2"><i class="bi bi-clock me-2" aria-hidden="true"></i> {{ $siteSettings['office_hours'] ?? (app()->getLocale() == 'sw' ? 'Jumatatu-Ijumaa: 8AM - 4:30PM' : 'Mon-Fri: 8AM - 4:30PM') }}</li>

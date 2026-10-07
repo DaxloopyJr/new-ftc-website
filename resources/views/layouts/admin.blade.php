@@ -175,8 +175,46 @@
         }
     </style>
     @yield('styles')
+<style>
+        /* FCT page loader */
+        #fct-page-loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity .5s ease, visibility .5s ease;
+        }
+        #fct-page-loader.fct-loader-hidden {
+            opacity: 0; visibility: hidden; pointer-events: none;
+        }
+        .fct-loader-box { text-align: center; }
+        .fct-loader-logo {
+            height: 70px; margin-bottom: 1rem;
+            animation: fctLoaderPulse 1.2s ease-in-out infinite;
+        }
+        .fct-loader-spinner {
+            width: 44px; height: 44px; margin: 0 auto;
+            border: 4px solid rgba(27,94,32,.2);
+            border-top-color: #1B5E20;
+            border-radius: 50%;
+            animation: fctLoaderSpin .8s linear infinite;
+        }
+        .fct-loader-text {
+            margin-top: .8rem; color: #1B5E20;
+            font-size: .85rem; letter-spacing: .1em; text-transform: uppercase;
+        }
+        @keyframes fctLoaderSpin { to { transform: rotate(360deg); } }
+        @keyframes fctLoaderPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.94); opacity: .75; } }
+    </style>
 </head>
 <body>
+    <!-- Page loading animation -->
+    <div id="fct-page-loader" aria-hidden="true">
+        <div class="fct-loader-box">
+            <img src="{{ asset('assets/images/fct-logo.png') }}" alt="" class="fct-loader-logo">
+            <div class="fct-loader-spinner"></div>
+            <div class="fct-loader-text">{{ app()->getLocale() == 'sw' ? 'Inapakia...' : 'Loading...' }}</div>
+        </div>
+    </div>
     @include('components.admin-navbar')
     @include('components.admin-sidebar')
 
@@ -207,5 +245,17 @@
         }
     </script>
     @yield('scripts')
+<script>
+    // FCT page loader: hide when the page has fully loaded
+    window.addEventListener('load', function () {
+        var loader = document.getElementById('fct-page-loader');
+        if (loader) { setTimeout(function () { loader.classList.add('fct-loader-hidden'); }, 250); }
+    });
+    // Safety net: never keep the loader up longer than 6s
+    setTimeout(function () {
+        var loader = document.getElementById('fct-page-loader');
+        if (loader) { loader.classList.add('fct-loader-hidden'); }
+    }, 6000);
+</script>
 </body>
 </html>

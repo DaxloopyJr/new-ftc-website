@@ -73,6 +73,50 @@
                 <div class="hero-slide-item slide-fixed">
                     {{-- Animated gradient background (no image) --}}
                     <div class="slide-overlay"></div>
+                        {{-- Leadership cards: always visible on the first slide; rectangular photos; link to bio --}}
+                        <div class="cmt-leaders cmt-leaders--sticky">
+                            @if($chairperson)
+                                <article class="leader-card">
+                                    <a class="leader-link" href="{{ route('team.index') }}#member-{{ $chairperson->id }}">
+                                        <div class="leader-circle">
+                                            @if($chairperson->photo)
+                                                <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" loading="lazy">
+                                            @else
+                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
+                                            @endif
+                                        </div>
+                                        <h6 class="leader-name">{{ $chairperson->name }}</h6>
+                                        <small class="leader-role">{{ $chairperson->getField('title') }}</small>
+                                    </a>
+                                </article>
+                            @endif
+                            @if($registrar)
+                                <article class="leader-card">
+                                    <a class="leader-link" href="{{ route('team.index') }}#member-{{ $registrar->id }}">
+                                        <div class="leader-circle">
+                                            @if($registrar->photo)
+                                                <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" loading="lazy">
+                                            @else
+                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
+                                            @endif
+                            @if($latestAnnouncement)
+                            <article class="leader-card leader-card--announcement{{ $latestAnnouncement->published_at && $latestAnnouncement->published_at->greaterThanOrEqualTo(now()->subDays(7)) ? ' is-new' : '' }}">
+                                <a class="leader-link" href="{{ route('announcements.index') }}">
+                                    <div class="leader-circle">
+                                        <i class="bi bi-megaphone-fill text-white" style="font-size:2.2rem;" aria-hidden="true"></i>
+                                    </div>
+                                    <h6 class="leader-name">{{ app()->getLocale() == 'sw' ? 'Matangazo' : 'Announcements' }}</h6>
+                                    <small class="leader-role">{{ \Illuminate\Support\Str::limit($latestAnnouncement->getField('title'), 60) }}</small>
+                                </a>
+                            </article>
+                            @endif
+                                        </div>
+                                        <h6 class="leader-name">{{ $registrar->name }}</h6>
+                                        <small class="leader-role">{{ $registrar->getField('title') }}</small>
+                                    </a>
+                                </article>
+                            @endif
+                        </div>
                     <div class="slide-content">
                         <div class="container">
                             <div class="row align-items-center">
@@ -100,45 +144,6 @@
                                         </div>
                                     </article>
                                 </div>
-                                {{-- Leadership Profiles --}}
-                                <div class="col-lg-5 d-none d-lg-block">
-                                    <aside class="row g-3" aria-label="{{ app()->getLocale() == 'sw' ? 'Viongozi' : 'Leadership' }}">
-                                        @if($chairperson)
-                                        <div class="col-6">
-                                            <article class="card border-0" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);">
-                                                <div class="card-body text-center text-white p-3">
-                                                    <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center overflow-hidden" style="width:130px;height:130px;background:rgba(255,255,255,0.15);">
-                                                        @if($chairperson->photo)
-                                                            <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" style="width:130px;height:130px;object-fit:cover;" loading="lazy">
-                                                        @else
-                                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                                        @endif
-                                                    </div>
-                                                    <h6 class="mb-0 text-white" style="font-size:0.8rem;font-weight:600;">{{ $chairperson->name }}</h6>
-                                                    <small class="text-white" style="opacity:0.75;font-size:0.7rem;">{{ $chairperson->title }}</small>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        @endif
-                                        @if($registrar)
-                                        <div class="col-6">
-                                            <article class="card border-0" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);">
-                                                <div class="card-body text-center text-white p-3">
-                                                    <div class="rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center overflow-hidden" style="width:130px;height:130px;background:rgba(255,255,255,0.15);">
-                                                        @if($registrar->photo)
-                                                            <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" style="width:130px;height:130px;object-fit:cover;" loading="lazy">
-                                                        @else
-                                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                                        @endif
-                                                    </div>
-                                                    <h6 class="mb-0 text-white" style="font-size:0.8rem;font-weight:600;">{{ $registrar->name }}</h6>
-                                                    <small class="text-white" style="opacity:0.75;font-size:0.7rem;">{{ $registrar->title }}</small>
-                                                </div>
-                                            </article>
-                                        </div>
-                                        @endif
-                                    </aside>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,69 +155,67 @@
             {{-- ========================================= --}}
             @foreach($heroSlides as $index => $slide)
             <div class="carousel-item">
-                <div class="hero-slide-item hero-split-slide">
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content" style="position:relative;width:100%;">
-                        <div class="hero-split-wrap">
-                            {{-- Left: image --}}
-                            <div class="hero-split-image">
-                                <img src="{{ asset($slide->image_path) }}" class="hero-split-bg"
-                                     alt="{{ $slide->getField('title') }}" loading="lazy">
-
-                                {{-- Leadership portraits: hidden by default, appear on hover, larger --}}
-                                <div class="hero-split-leaders">
-                                    @if($chairperson)
-                                    <article class="leader-card">
-                                        <div class="leader-circle">
-                                            @if($chairperson->photo)
-                                                <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" loading="lazy">
-                                            @else
-                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                            @endif
-                                        </div>
-                                        <h6 class="leader-name">{{ $chairperson->name }}</h6>
-                                        <small class="leader-role">{{ $chairperson->getField('title') }}</small>
-                                    </article>
-                                    @endif
-                                    @if($registrar)
-                                    <article class="leader-card">
-                                        <div class="leader-circle">
-                                            @if($registrar->photo)
-                                                <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" loading="lazy">
-                                            @else
-                                                <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
-                                            @endif
-                                        </div>
-                                        <h6 class="leader-name">{{ $registrar->name }}</h6>
-                                        <small class="leader-role">{{ $registrar->getField('title') }}</small>
-                                    </article>
-                                    @endif
-                                </div>
+                <div class="hero-slide-item hero-cmt-slide">
+                    {{-- Left: caption panel (same style as the first slide) --}}
+                    <div class="cmt-caption">
+                        <article class="slide-caption" style="max-width:100%;">
+                            <h1>{{ $slide->getField('title') }}</h1>
+                            <p>{{ $slide->getField('subtitle') }}</p>
+                            <div class="btn-group-slides">
+                                @if($slide->button_text && $slide->button_link)
+                                    <a href="{{ $slide->button_link }}" class="btn btn-slide-action btn-lg">
+                                        <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
+                                        {{ $slide->getField('button_text') }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('pages.show', 'about-us') }}" class="btn btn-slide-action btn-lg">
+                                        <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
+                                        {{ __('messages.learn_more') }}
+                                    </a>
+                                @endif
+                                <a href="{{ route('pages.show', 'how-to-appeal') }}" class="btn btn-slide-outline btn-lg">
+                                    {{ app()->getLocale() == 'sw' ? 'Fungua Rufaa' : 'File an Appeal' }}
+                                </a>
                             </div>
+                        </article>
+                    </div>
 
-                            {{-- Right: caption --}}
-                            <div class="hero-split-caption">
-                                <article class="slide-caption" style="max-width:100%;">
-                                    <h1>{{ $slide->getField('title') }}</h1>
-                                    <p>{{ $slide->getField('subtitle') }}</p>
-                                    <div class="btn-group-slides">
-                                        @if($slide->button_text && $slide->button_link)
-                                            <a href="{{ $slide->button_link }}" class="btn btn-slide-action btn-lg">
-                                                <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
-                                                {{ $slide->getField('button_text') }}
-                                            </a>
+                    {{-- Right: image, with Chairperson & Registrar appearing on hover --}}
+                    <div class="cmt-image">
+                        <img src="{{ asset($slide->image_path) }}" class="cmt-bg"
+                             alt="{{ $slide->getField('title') }}" loading="lazy">
+                        <div class="cmt-loadline" aria-hidden="true"></div>
+                        <div class="cmt-leaders">
+                            @if($chairperson)
+                            <article class="leader-card">
+                                <a class="leader-link" href="{{ route('team.index') }}#member-{{ $chairperson->id }}">
+                                    <div class="leader-circle">
+                                        @if($chairperson->photo)
+                                            <img src="{{ asset($chairperson->photo) }}" alt="{{ $chairperson->name }}" loading="lazy">
                                         @else
-                                            <a href="{{ route('pages.show', 'about-us') }}" class="btn btn-slide-action btn-lg">
-                                                <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
-                                                {{ __('messages.learn_more') }}
-                                            </a>
+                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
                                         @endif
-                                        <a href="{{ route('pages.show', 'how-to-appeal') }}" class="btn btn-slide-outline btn-lg">
-                                            {{ app()->getLocale() == 'sw' ? 'Fungua Rufaa' : 'File an Appeal' }}
-                                        </a>
                                     </div>
-                                </article>
-                            </div>
+                                    <h6 class="leader-name">{{ $chairperson->name }}</h6>
+                                    <small class="leader-role">{{ $chairperson->getField('title') }}</small>
+                                </a>
+                            </article>
+                            @endif
+                            @if($registrar)
+                            <article class="leader-card">
+                                <a class="leader-link" href="{{ route('team.index') }}#member-{{ $registrar->id }}">
+                                    <div class="leader-circle">
+                                        @if($registrar->photo)
+                                            <img src="{{ asset($registrar->photo) }}" alt="{{ $registrar->name }}" loading="lazy">
+                                        @else
+                                            <i class="bi bi-person text-white fs-1" aria-hidden="true"></i>
+                                        @endif
+                                    </div>
+                                    <h6 class="leader-name">{{ $registrar->name }}</h6>
+                                    <small class="leader-role">{{ $registrar->getField('title') }}</small>
+                                </a>
+                            </article>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -220,6 +223,9 @@
             @endforeach
 
         </div>
+
+        {{-- Slide counter (CMT style) --}}
+        <div class="cmt-counter" aria-hidden="true"><span id="cmtCounter">1</span> / {{ count($heroSlides) + 1 }}</div>
 
         {{-- Carousel Controls --}}
         @if($totalSlides > 1)
@@ -428,10 +434,6 @@
     </div>
 </section>
 @endif
-@section('styles')
-<link href="{{ asset('assets/css/fct-bilingual.css') }}" rel="stylesheet">
-@endsection
-
 @section('scripts')
 <script src="{{ asset('assets/js/fct-hero.js') }}"></script>
 @endsection

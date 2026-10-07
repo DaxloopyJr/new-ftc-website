@@ -33,6 +33,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Advertisements
     Route::resource('advertisements', Admin\AdvertisementController::class);
+    Route::resource('office-locations', Admin\OfficeLocationController::class);
 
     // Media Gallery
     Route::resource('gallery', Admin\MediaGalleryController::class);

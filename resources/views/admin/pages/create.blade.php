@@ -52,7 +52,14 @@
                         <label class="form-check-label" for="is_published">Published</label>
                     </div>
                 </div>
-                                {{-- Swahili (Kiswahili) fields --}}
+                                                {{-- Organisation structure chart --}}
+                <div class="col-12">
+                    <label class="form-label">Organisation Structure Chart (image)</label>
+                    <input type="file" name="org_chart_image" class="form-control" accept="image/*">
+                    <small class="text-muted">Displayed on the page (e.g. organisation-structure). Optional.</small>
+                </div>
+
+                {{-- Swahili (Kiswahili) fields --}}
                 <div class="col-12 mt-3 pt-3 border-top">
                     <h6 class="text-muted mb-0"><i class="bi bi-translate me-1"></i> Kiswahili (hiari — English itaonyeshwa kama wazi)</h6>
                 </div>

@@ -711,9 +711,71 @@
             }
         }
     </style>
+    {{-- Appearance: colors + skin from Admin > Settings --}}
+    @php
+        $fctPrimaryColor = \App\Models\Setting::where('key', 'appearance_primary_color')->value('value') ?: '#1B5E20';
+        $fctAccentColor  = \App\Models\Setting::where('key', 'appearance_accent_color')->value('value') ?: '#f5b301';
+        $fctSkin         = \App\Models\Setting::where('key', 'appearance_skin')->value('value') ?: 'light';
+    @endphp
+    <style>
+        :root {
+            --fct-primary: {{ $fctPrimaryColor }};
+            --fct-accent: {{ $fctAccentColor }};
+        }
+        @if($fctSkin === 'dark')
+        :root {
+            --fct-text: #e8ecf1;
+            --fct-text-secondary: #9aa7b5;
+            --fct-border: #2c3a4d;
+            --fct-surface: #1c2635;
+        }
+        body { background: #141d2b !important; color: #e8ecf1 !important; }
+        @endif
+    </style>
+
+    <link href="{{ asset('assets/css/fct-bilingual.css') }}" rel="stylesheet">
+
     @yield('styles')
+<style>
+        /* FCT page loader */
+        #fct-page-loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity .5s ease, visibility .5s ease;
+        }
+        #fct-page-loader.fct-loader-hidden {
+            opacity: 0; visibility: hidden; pointer-events: none;
+        }
+        .fct-loader-box { text-align: center; }
+        .fct-loader-logo {
+            height: 70px; margin-bottom: 1rem;
+            animation: fctLoaderPulse 1.2s ease-in-out infinite;
+        }
+        .fct-loader-spinner {
+            width: 44px; height: 44px; margin: 0 auto;
+            border: 4px solid rgba(27,94,32,.2);
+            border-top-color: #1B5E20;
+            border-radius: 50%;
+            animation: fctLoaderSpin .8s linear infinite;
+        }
+        .fct-loader-text {
+            margin-top: .8rem; color: #1B5E20;
+            font-size: .85rem; letter-spacing: .1em; text-transform: uppercase;
+        }
+        @keyframes fctLoaderSpin { to { transform: rotate(360deg); } }
+        @keyframes fctLoaderPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.94); opacity: .75; } }
+    </style>
 </head>
 <body>
+    <!-- Page loading animation -->
+    <div id="fct-page-loader" aria-hidden="true">
+        <div class="fct-loader-box">
+            <img src="{{ asset('assets/images/fct-logo.png') }}" alt="" class="fct-loader-logo">
+            <div class="fct-loader-spinner"></div>
+            <div class="fct-loader-text">{{ app()->getLocale() == 'sw' ? 'Inapakia...' : 'Loading...' }}</div>
+        </div>
+    </div>
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-to-content">{{ app()->getLocale() == 'sw' ? 'Ruka hadi maudhui' : 'Skip to main content' }}</a>
 
@@ -726,6 +788,20 @@
     @include('components.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/js/fct-nav.js') }}"></script>
+
     @yield('scripts')
+<script>
+    // FCT page loader: hide when the page has fully loaded
+    window.addEventListener('load', function () {
+        var loader = document.getElementById('fct-page-loader');
+        if (loader) { setTimeout(function () { loader.classList.add('fct-loader-hidden'); }, 250); }
+    });
+    // Safety net: never keep the loader up longer than 6s
+    setTimeout(function () {
+        var loader = document.getElementById('fct-page-loader');
+        if (loader) { loader.classList.add('fct-loader-hidden'); }
+    }, 6000);
+</script>
 </body>
 </html>

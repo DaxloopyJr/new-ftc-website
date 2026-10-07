@@ -12,16 +12,18 @@ class HomeController extends Controller
     public function index()
     {
         $heroSlides = HeroSlide::active()->get();
-		$headerPages = Page::where('is_published', true)->whereNull('parent_id')->with('children')->get();
+        $headerPages = Page::where('is_published', true)->whereNull('parent_id')->with('children')->get();
         $latestNews = NewsEvent::published()->orderBy('published_at', 'desc')->take(6)->get();
         $advertisements = Advertisement::active()->byPosition('home_middle')->get();
         $chairperson = TeamMember::active()->byCategory('tribunal_member')->where('title', 'like', '%Chairperson%')->first();
         $registrar = TeamMember::active()->byCategory('management')->where('title', 'like', '%Registrar%')->first();
-		
-        return view('frontend.home', compact('heroSlides', 'headerPages', 'latestNews', 'advertisements', 'chairperson', 'registrar'));
+        $latestAnnouncement = NewsEvent::published()->where('is_announcement', true)
+            ->latest('published_at')->first();
+
+        return view('frontend.home', compact('heroSlides', 'headerPages', 'latestNews', 'advertisements', 'chairperson', 'registrar', 'latestAnnouncement'));
     }
-	
-	public function admin()
+
+    public function admin()
     {
         return view('auth.login');
     }

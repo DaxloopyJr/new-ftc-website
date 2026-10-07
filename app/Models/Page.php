@@ -15,6 +15,7 @@ class Page extends Model
     protected $fillable = [
         'title',
         'title_sw',
+        'org_chart_image',
         'slug',
         'content',
         'content_sw',

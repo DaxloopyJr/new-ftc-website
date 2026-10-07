@@ -27,6 +27,9 @@ class PageController extends Controller
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
         if (empty($data['slug'])) { $data['slug'] = Str::slug($data['title']); }
+        if ($request->hasFile('org_chart_image')) {
+            $data['org_chart_image'] = $request->file('org_chart_image')->store('org-charts', 'public');
+        }
         Page::create($data);
         cache()->forget('header_pages');
         return redirect()->route('admin.pages.index')->with('success', 'Page created successfully.');
@@ -44,6 +47,9 @@ class PageController extends Controller
         $page = Page::findOrFail($id);
         $data = $request->validated();
         $data['updated_by'] = auth()->id();
+        if ($request->hasFile('org_chart_image')) {
+            $data['org_chart_image'] = $request->file('org_chart_image')->store('org-charts', 'public');
+        }
         $page->update($data);
         cache()->forget('header_pages');
         return redirect()->route('admin.pages.index')->with('success', 'Page updated successfully.');

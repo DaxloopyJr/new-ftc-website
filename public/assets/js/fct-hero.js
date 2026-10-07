@@ -1,22 +1,12 @@
-// FCT hero carousel: overlap transition for dynamic (split) slides
+// FCT hero carousel: slide counter sync
 document.addEventListener('DOMContentLoaded', function () {
     var carousel = document.getElementById('heroCarousel');
-    if (!carousel || !window.bootstrap) return;
-
-    function activate(el) {
-        if (!el) return;
-        document.querySelectorAll('.hero-split-slide').forEach(function (s) {
-            s.classList.remove('active', 'overlap-in');
-        });
-        el.classList.add('active');
-        void el.offsetWidth; // restart the wipe animation
-        el.classList.add('overlap-in');
-    }
-
+    if (!carousel) return;
+    var counter = document.getElementById('cmtCounter');
+    if (!counter) return;
+    var items = carousel.querySelectorAll('.carousel-item');
     carousel.addEventListener('slid.bs.carousel', function (e) {
-        activate(e.relatedTarget && e.relatedTarget.querySelector('.hero-split-slide'));
+        var idx = Array.prototype.indexOf.call(items, e.relatedTarget);
+        if (idx > -1) { counter.textContent = idx + 1; }
     });
-
-    var initial = carousel.querySelector('.carousel-item.active .hero-split-slide');
-    if (initial) activate(initial);
 });

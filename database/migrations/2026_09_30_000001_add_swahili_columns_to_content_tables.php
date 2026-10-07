@@ -47,6 +47,30 @@ return new class extends Migration
         Schema::table('settings', function (Blueprint $t) {
             $t->text('value_sw')->nullable()->after('value');
         });
+
+        // Swahili menu/page titles for existing seeded pages
+        if (Schema::hasTable('pages')) {
+            $swTitles = [
+                'about-us' => 'Kuhusu Sisi', 'history' => 'Historia', 'vision-mission' => 'Dira na Dhamira',
+                'core-values-functions' => 'Maadili Makuu na Majukumu', 'administration' => 'Utawala',
+                'organisation-structure' => 'Muundo wa Shirika', 'tribunal-members' => 'Wajumbe wa Mahakama',
+                'management' => 'Usimamizi', 'appeal-procedures' => 'Taritibu za Rufaa',
+                'how-to-appeal' => 'Jinsi ya Kufungua Rufaa', 'fee-structure' => 'Muonekano wa Ada',
+                'forms' => 'Fomu', 'info-library' => 'Maktaba ya Taarifa', 'case-digest' => 'Muhtasari wa Kesi',
+                'decided-cases' => 'Kesi Zilizoamuliwa', 'registered-cases' => 'Kesi Zilizosajiliwa',
+                'cause-list' => 'Orodha ya Kesi', 'brochures' => 'Vipeperushi',
+                'publications' => 'Machapisho', 'acts-and-rules' => 'Sheria na Kanuni',
+                'strategic-plan' => 'Mpango Mkakati', 'client-service-charter' => 'Hati ya Huduma kwa Mteja',
+                'annual-reports' => 'Ripoti za Mwaka', 'media-center' => 'Kituo cha Habari',
+                'news' => 'Habari', 'photo-gallery' => 'Matunzio ya Picha',
+                'video-gallery' => 'Matunzio ya Video', 'digital-case-filing' => 'Kufungua Kesi Mtandaoni',
+                'contact-us' => 'Wasiliana Nasi',
+            ];
+            foreach ($swTitles as $slug => $swTitle) {
+                \Illuminate\Support\Facades\DB::table('pages')->where('slug', $slug)->update(['title_sw' => $swTitle]);
+            }
+        }
+
     }
 
     public function down(): void
@@ -65,5 +89,6 @@ return new class extends Migration
         foreach ($cols as $table => $columns) {
             Schema::table($table, fn (Blueprint $t) => $t->dropColumn($columns));
         }
+
     }
 };

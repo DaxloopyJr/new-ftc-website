@@ -48,7 +48,13 @@
                         <label class="form-check-label" for="is_published">Published</label>
                     </div>
                 </div>
-                                {{-- Swahili (Kiswahili) fields --}}
+                                                <div class="col-12 form-check ms-2">
+                    <input type="hidden" name="is_announcement" value="0">
+                    <input type="checkbox" name="is_announcement" value="1" class="form-check-input" id="is_announcement" {{ old('is_announcement') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_announcement">Announcement (shows in the Announcements card &amp; sidebar)</label>
+                </div>
+
+                {{-- Swahili (Kiswahili) fields --}}
                 <div class="col-12 mt-3 pt-3 border-top">
                     <h6 class="text-muted mb-0"><i class="bi bi-translate me-1"></i> Kiswahili (hiari — English itaonyeshwa kama wazi)</h6>
                 </div>

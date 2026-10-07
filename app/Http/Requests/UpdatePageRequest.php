@@ -26,6 +26,7 @@ class UpdatePageRequest extends FormRequest
             'is_published' => 'boolean',
             'title_sw' => 'nullable|string|max:255',
             'content_sw' => 'nullable|string',
+            'org_chart_image' => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:4096',
         ];
     }
 }

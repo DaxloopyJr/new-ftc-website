@@ -60,42 +60,53 @@
             </div>
         </nav>
 
-        <div class="card border-0 shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead style="background:var(--fct-surface);">
-                        <tr>
-                            <th scope="col">{{ app()->getLocale() == 'sw' ? 'Kichwa' : 'Title' }}</th>
-                            <th scope="col">{{ __('messages.category') }}</th>
-                            <th scope="col">{{ app()->getLocale() == 'sw' ? 'Na. ya Kesi' : 'Case No.' }}</th>
-                            <th scope="col">{{ app()->getLocale() == 'sw' ? 'Tarehe' : 'Date' }}</th>
-                            <th scope="col">{{ app()->getLocale() == 'sw' ? 'Kitendo' : 'Action' }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($items as $item)
-                            <tr>
-                                <td>
-                                    <strong>{{ $item->getField('title') }}</strong>
-                                    @if($item->parties)<br><small class="text-muted">{{ $item->parties }}</small>@endif
-                                </td>
-                                <td><span class="badge" style="background:var(--fct-primary);">{{ $item->category_label }}</span></td>
-                                <td>{{ $item->case_number ?? '-' }}</td>
-                                <td><time datetime="{{ $item->decision_date ? $item->decision_date->format('Y-m-d') : '' }}">{{ $item->decision_date ? $item->decision_date->format('M j, Y') : '-' }}</time></td>
-                                <td>
-                                    <a href="{{ route('info-library.download', $item->slug) }}" class="btn btn-sm btn-fct-primary" aria-label="{{ __('messages.download') }} {{ $item->getField('title') }}"><i class="bi bi-download" aria-hidden="true"></i></a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="5" class="text-center py-4 text-muted">{{ __('messages.no_documents') }}</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        {{-- Filters --}}
+        <form id="doclist-filters" method="GET" action="{{ route('info-library.index') }}" class="fct-filter-bar row g-2 align-items-end mb-4" role="search">
+            @if($category)<input type="hidden" name="category" value="{{ $category }}">@endif
+            <div class="col-md-3">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Tafuta' : 'Search' }}</label>
+                <input type="search" name="q" class="form-control form-control-sm" value="{{ $filters['q'] ?? '' }}" placeholder="{{ app()->getLocale() == 'sw' ? 'Tafuta...' : 'Search...' }}">
             </div>
+            <div class="col-md-2">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Aina ya Kesi' : 'Case Type' }}</label>
+                <select name="type" class="form-select form-select-sm">
+                    <option value="">{{ app()->getLocale() == 'sw' ? 'Zote' : 'All' }}</option>
+                    <option value="appeal" {{ ($filters['type'] ?? '') == 'appeal' ? 'selected' : '' }}>{{ app()->getLocale() == 'sw' ? 'Rufaa' : 'Appeal' }}</option>
+                    <option value="application" {{ ($filters['type'] ?? '') == 'application' ? 'selected' : '' }}>{{ app()->getLocale() == 'sw' ? 'Maombi' : 'Application' }}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Hali' : 'Status' }}</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">{{ app()->getLocale() == 'sw' ? 'Zote' : 'All' }}</option>
+                    @foreach(['Hearing', 'Mention', 'Judgement'] as $st)
+                        <option value="{{ $st }}" {{ ($filters['status'] ?? '') == $st ? 'selected' : '' }}>{{ $st }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Mwaka' : 'Year' }}</label>
+                <select name="year" class="form-select form-select-sm">
+                    <option value="">{{ app()->getLocale() == 'sw' ? 'Wote' : 'All' }}</option>
+                    @foreach($years as $y)
+                        <option value="{{ $y }}" {{ (string)($filters['year'] ?? '') === (string)$y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-fct-primary"><i class="bi bi-funnel me-1" aria-hidden="true"></i>{{ app()->getLocale() == 'sw' ? 'Chuja' : 'Filter' }}</button>
+                <a href="{{ route('info-library.index', $category ? ['category' => $category] : []) }}" class="btn btn-sm btn-outline-secondary">{{ app()->getLocale() == 'sw' ? 'Futa' : 'Reset' }}</a>
+            </div>
+        </form>
+
+        {{-- Document list (updated via AJAX) --}}
+        <div id="doclist-wrap">
+            @include('frontend.partials.doclist', ['listItems' => $items, 'listKind' => 'info'])
         </div>
-        <nav class="d-flex justify-content-center mt-4" aria-label="{{ app()->getLocale() == 'sw' ? 'Ukurasa wa nyaraka' : 'Documents pagination' }}">
-            {{ $items->links() }}
-        </nav>
     </div>
 </section>
+@section('scripts')
+<script src="{{ asset('assets/js/fct-doclist.js') }}"></script>
+@endsection
+
 @endsection

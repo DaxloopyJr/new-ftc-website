@@ -90,6 +90,7 @@
                                     <li><a class="dropdown-item {{ request()->is($child->slug) ? 'active' : '' }}" href="{{ route('pages.show', $child->slug) }}">{{ strtolower($child->getField('title')) }}</a></li>
                                 @endforeach
                             </ul>
+
                         </li>
                     @else
                         <li class="nav-item {{ request()->is($page->slug) ? 'active' : '' }}">

@@ -1,5 +1,5 @@
 /* ============================================================
-   FCT bilingual + hero slider redesign overrides
+   FCT bilingual + hero slider (CMT look) overrides
    ============================================================ */
 
 /* ---------- Nav: parent highlighted when child is active ---------- */
@@ -13,76 +13,291 @@
     background-color: var(--fct-primary, #1a5632);
     color: #fff;
 }
-
-/* ---------- Dynamic slides (2+): two-sided split layout ---------- */
-.hero-split-slide .hero-slide-item { position: relative; overflow: hidden; }
-
-.hero-split-wrap { display: flex; min-height: 480px; height: 100%; }
-.hero-split-image { flex: 0 0 50%; position: relative; overflow: hidden; }
-.hero-split-image img.hero-split-bg {
-    width: 100%; height: 100%; object-fit: cover;
-    transform: scale(1.12);
-    transition: transform 1.4s cubic-bezier(.22,.61,.36,1);
-}
-.hero-split-caption {
-    flex: 0 0 50%;
-    display: flex; align-items: center;
-    padding: 3rem 4rem;
-    background: linear-gradient(135deg, var(--fct-primary, #1a5632), var(--fct-primary-dark, #0f3a21));
+/* No highlight box on top-level hover — accent text instead */
+.navbar-fct .nav-link:hover { background-color: transparent !important; }
+.navbar-fct .nav-item.dropdown:hover > .nav-link { color: var(--fct-accent, #f5b301) !important; }
+/* Submenu hover uses the theme color, not Bootstrap blue */
+.navbar-fct .dropdown-menu .dropdown-item:hover,
+.navbar-fct .dropdown-menu .dropdown-item:focus {
+    background-color: var(--fct-primary, #1B5E20);
     color: #fff;
-    position: relative;
-    overflow: hidden;
 }
-.hero-split-caption h1 { color:#fff; font-size:2.2rem; margin-bottom:1rem; }
-.hero-split-caption p  { color:rgba(255,255,255,.85); font-size:1.05rem; }
 
-/* ---------- Leadership portraits: hidden, appear on hover, BIGGER ---------- */
-.hero-split-leaders {
-    position: absolute; right: 1.5rem; bottom: 1.5rem;
-    display: flex; gap: 1rem; z-index: 5; pointer-events: none;
+/* ---------- Reduced slider height (desktop): 600px -> 480px ---------- */
+@media (min-width: 992px) {
+    .hero-section,
+    .hero-carousel,
+    .hero-carousel .carousel-item {
+        height: 480px !important;
+        min-height: 480px !important;
+    }
 }
-.hero-split-leaders .leader-card {
-    opacity: 0; transform: translateY(30px) scale(.92);
-    transition: opacity .5s ease, transform .5s ease;
-    background: rgba(255,255,255,0.14);
+
+/* ---------- Dynamic slides (2+): slide-1 colors LEFT, image card RIGHT ---------- */
+.hero-cmt-slide {
+    display: flex; height: 100%; width: 100%; overflow: hidden;
+    /* Same gradient colors as the first (fixed) slide */
+    background: linear-gradient(135deg, rgba(13,59,16,0.98) 0%, rgba(27,94,32,0.95) 55%, rgba(0,163,221,0.35) 100%);
+}
+
+/* Left caption panel */
+.cmt-caption {
+    flex: 0 0 46%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 2rem 3rem;
+    color: #fff;
+    background: transparent;
+    border-right: none;
+}
+.cmt-tags { margin-bottom: 1.4rem; }
+.cmt-tag {
+    display: inline-flex; align-items: center;
+    border: 1px solid rgba(245, 179, 1, 0.5);
+    color: #f5b301;
+    padding: .3rem .95rem; border-radius: 999px;
+    font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+    margin: 0 .5rem .5rem 0;
+}
+.cmt-tag::before {
+    content: ""; display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #f5b301; margin-right: .5rem;
+}
+.cmt-caption h1 {
+    color: #fff; margin: 0 0 .6rem 0;
+}
+.cmt-caption p { color: rgba(255,255,255,.8); font-size: 1rem; margin: 0 0 1.6rem 0; }
+
+/* Pill buttons (gold filled + outline) */
+.btn-cmt-gold {
+    background: #f5b301; color: #141d2b; font-weight: 600;
+    border-radius: 999px; padding: .7rem 1.6rem;
+    border: none;
+}
+.btn-cmt-gold:hover { background: #ffd54d; color: #141d2b; }
+.btn-cmt-outline {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 999px; padding: .7rem 1.6rem;
+}
+.btn-cmt-outline:hover { border-color: #fff; color: #fff; }
+
+/* Right image card (rounded, floating) */
+.cmt-image {
+    flex: 1; position: relative; overflow: hidden;
+    margin: 26px 30px 26px 0;
+    border-radius: 14px;
+    background: #0d1520;
+    box-shadow: 0 12px 32px rgba(0,0,0,.35);
+    z-index: 1;
+}
+.cmt-image .cmt-bg {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+    transform: scale(1.08);
+    transition: transform 1.4s cubic-bezier(.22,.61,.36,1), opacity 1s ease;
+}
+.carousel-item.active .hero-cmt-slide .cmt-bg { transform: scale(1); }
+
+/* Loading line on top of the image (restarts automatically with .active) */
+.cmt-loadline {
+    position: absolute; top: 0; left: 0;
+    height: 3px; width: 0;
+    background: #f5b301;
+    z-index: 6; border-radius: 0 2px 2px 0;
+}
+.carousel-item.active .cmt-loadline {
+    animation: fctLoadline 5s linear forwards;   /* matches Bootstrap's 5s default interval */
+}
+@keyframes fctLoadline { from { width: 0; } to { width: 100%; } }
+
+/* ---------- Leadership cards (identical in slide 1 and dynamic slides) ---------- */
+.leader-card {
+    width: 230px;
+    padding: .9rem;
+    text-align: center;
+    background: rgba(255,255,255,0.15);
     backdrop-filter: blur(10px);
-    border-radius: 1rem; padding: .9rem; text-align: center; width: 185px;
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255,255,255,0.25);
+    opacity: 0;
+    transform: translateX(30px) scale(.94);
+    transition: opacity .5s ease, transform .5s ease;
 }
-.hero-split-slide:hover .hero-split-leaders .leader-card {
-    opacity: 1; transform: translateY(0) scale(1);
-}
-.hero-split-leaders .leader-card:nth-child(2) { transition-delay: .08s; }
-.hero-split-leaders .leader-circle {
-    width: 150px; height: 150px; border-radius: 50%; overflow: hidden;
-    margin: 0 auto .6rem; background: rgba(255,255,255,0.15);
+.leader-card--static { opacity: 1; transform: none; width: 180px; margin: 0 auto; }
+.leader-circle {
+    width: 100%; height: 200px;
+    border-radius: 10px; overflow: hidden;
+    margin: 0 auto .6rem;
+    background: rgba(255,255,255,0.12);
     display: flex; align-items: center; justify-content: center;
 }
-.hero-split-leaders .leader-circle img { width: 150px; height: 150px; object-fit: cover; }
-.hero-split-leaders .leader-name { color:#fff; font-size:.85rem; font-weight:600; margin:0; }
-.hero-split-leaders .leader-role { color:#fff; opacity:.75; font-size:.72rem; }
+.leader-circle img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+.leader-card a.leader-link { display: block; color: inherit; text-decoration: none; }
+.leader-name { color: #fff; font-size: .85rem; font-weight: 600; margin: 0; }
+.leader-role { color: #fff; opacity: .8; font-size: .72rem; }
 
-/* ---------- Overlap transition: top image wipes away revealing the one beneath ---------- */
-.hero-split-slide.overlap-in .hero-split-image img.hero-split-bg {
-    animation: fctOverlap 1.2s cubic-bezier(.4,0,.2,1) both;
+/* Leaders on dynamic slides: hidden, appear on top of the image on hover */
+.slide-fixed { position: relative; overflow: hidden; }
+.cmt-leaders {
+    position: absolute; z-index: 4;
+    right: 5%; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 1rem; pointer-events: none;
 }
-@keyframes fctOverlap {
-    0%   { clip-path: inset(0 0 0 0); opacity: 1; }
-    65%  { clip-path: inset(0 0 0 0); opacity: 1; }
-    100% { clip-path: inset(0 0 0 100%); opacity: 0; }
+.hero-slide-item:hover .cmt-leaders .leader-card {
+    opacity: 1; transform: translateX(0) scale(1);
 }
-/* caption staggers in as the image lifts away */
-.hero-split-slide .hero-split-caption > * {
-    opacity: 0; transform: translateX(40px);
+.cmt-leaders .leader-card:nth-child(2) { transition-delay: .08s; }
+
+/* ---------- Indicators / counter / arrows over the image card ---------- */
+.hero-carousel .carousel-indicators {
+    justify-content: flex-start;
+    margin-left: 0; margin-right: 0;
+    padding-left: calc(46% + 46px);
+    bottom: 42px;
+    z-index: 10;
+}
+.hero-carousel .carousel-indicators [data-bs-target] {
+    width: 18px; height: 4px; border-radius: 2px;
+    background-color: rgba(255,255,255,.45);
+    border: none; opacity: 1;
+}
+.hero-carousel .carousel-indicators .active { background-color: #f5b301; width: 26px; }
+.cmt-counter {
+    position: absolute; z-index: 10;
+    right: 190px; bottom: 48px;
+    color: #fff; font-size: .8rem; letter-spacing: .08em;
+}
+.hero-carousel .carousel-control-prev,
+.hero-carousel .carousel-control-next {
+    top: auto; bottom: 34px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.35);
+    opacity: 1;
+}
+.hero-carousel .carousel-control-prev { left: auto; right: 128px; }
+.hero-carousel .carousel-control-next { left: auto; right: 66px; }
+.hero-carousel .carousel-control-prev-icon,
+.hero-carousel .carousel-control-next-icon { width: 18px; height: 18px; }
+
+/* ---------- Caption stagger-in (driven by Bootstrap's .active) ---------- */
+.carousel-item .hero-cmt-slide .cmt-caption > * {
+    opacity: 0; transform: translateX(30px);
     transition: opacity .7s ease, transform .7s ease;
 }
-.hero-split-slide.active .hero-split-caption > * { opacity: 1; transform: none; }
-.hero-split-slide.active .hero-split-caption > *:nth-child(2) { transition-delay: .15s; }
-.hero-split-slide.active .hero-split-caption > *:nth-child(3) { transition-delay: .3s; }
+.carousel-item.active .hero-cmt-slide .cmt-caption > * { opacity: 1; transform: none; }
+.carousel-item.active .hero-cmt-slide .cmt-caption > *:nth-child(2) { transition-delay: .12s; }
+.carousel-item.active .hero-cmt-slide .cmt-caption > *:nth-child(3) { transition-delay: .24s; }
+.carousel-item.active .hero-cmt-slide .cmt-caption > *:nth-child(4) { transition-delay: .36s; }
 
+/* ---------- Mobile ---------- */
 @media (max-width: 991px) {
-    .hero-split-wrap { flex-direction: column; }
-    .hero-split-image, .hero-split-caption { flex: 0 0 auto; }
-    .hero-split-image { height: 260px; }
-    .hero-split-caption { padding: 2rem; }
-    .hero-split-leaders { position: static; padding: 0 1rem 1rem; pointer-events: auto; }
+    .hero-cmt-slide { flex-direction: column; }
+    .cmt-caption { flex: 0 0 auto; padding: 1.6rem 1.4rem; }
+    .cmt-caption h1 { font-size: 1.7rem; }
+    .cmt-image { flex: 0 0 240px; margin: 0 1rem 1rem; }
+    .cmt-leaders {
+        position: relative; right: auto; top: auto; transform: none;
+        justify-content: center; padding: 1rem; pointer-events: auto;
+    }
+    .cmt-leaders .leader-card { opacity: 1; transform: none; }
+    .cmt-counter, .hero-carousel .carousel-control-prev, .hero-carousel .carousel-control-next { display: none; }
+    .hero-carousel .carousel-indicators { padding-left: 0; justify-content: center; bottom: 12px; }
 }
+
+/* First slide: leaders always visible (sticky) */
+.cmt-leaders--sticky { pointer-events: auto; }
+.cmt-leaders--sticky .leader-card { opacity: 1; transform: none; }
+
+/* ---------- Team page cards (same visual language as the slider leader cards) ---------- */
+.fct-team-card {
+    background: var(--fct-surface, #ffffff);
+    border: 1px solid var(--fct-border, #e3e7ea);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    transition: transform .3s ease, box-shadow .3s ease;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.fct-team-card:hover { transform: translateY(-6px); box-shadow: 0 14px 32px rgba(0,0,0,.15); }
+.fct-team-photo {
+    height: 240px;
+    width: 100%;
+    background: linear-gradient(135deg, var(--fct-primary, #1B5E20), var(--fct-primary-dark, #0D3B10));
+    display: flex; align-items: center; justify-content: center;
+}
+.fct-team-photo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.fct-team-photo i { font-size: 3.5rem; color: rgba(255,255,255,.85); }
+.fct-team-body { padding: 1.15rem 1.2rem 1.35rem; text-align: center; }
+.fct-team-body h5 { margin: 0 0 .3rem; font-size: 1.05rem; color: var(--fct-text, #1a1a1a); }
+.fct-team-body .role { margin: 0 0 .3rem; font-weight: 600; font-size: .85rem; color: var(--fct-primary, #1B5E20); }
+.fct-team-body .desig { margin: 0 0 .55rem; font-size: .78rem; color: var(--fct-text-secondary, #6c757d); }
+.fct-team-body .email { font-size: .75rem; color: var(--fct-text-secondary, #6c757d); text-decoration: none; word-break: break-all; }
+.fct-team-body .email:hover { color: var(--fct-primary, #1B5E20); }
+/* keep slider bio links from hiding under a fixed header */
+[id^="member-"] { scroll-margin-top: 90px; }
+
+/* ---------- Text shadow on header/hero heading titles ---------- */
+.breadcrumb-fct h1,
+.slide-caption h1,
+.cmt-caption h1 {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+}
+
+/* ---------- Text shadow on the government header headings ---------- */
+.fct-logo-text,
+.fct-logo-text h1 {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .35);
+}
+
+/* ---------- TanzLII-style document list + filter bar ---------- */
+.fct-doclist { border-top: 2px solid var(--fct-primary, #1B5E20); }
+.fct-doclist-row {
+    display: flex; gap: .9rem; align-items: flex-start;
+    padding: .95rem .25rem;
+    border-bottom: 1px solid var(--fct-border, #dfe4e8);
+    transition: background .2s ease;
+}
+.fct-doclist-row:hover { background: rgba(0, 0, 0, .025); }
+.fct-doclist-icon { font-size: 1.5rem; line-height: 1.4; flex-shrink: 0; }
+.fct-doclist-main { flex: 1; min-width: 0; }
+.fct-doclist-title {
+    font-weight: 600; font-size: 1rem;
+    color: var(--fct-primary, #1B5E20);
+    text-decoration: none;
+}
+.fct-doclist-title:hover { text-decoration: underline; }
+.fct-doclist-meta { color: var(--fct-text-secondary, #6c757d); font-size: .8rem; margin-top: .1rem; }
+.fct-doclist-actions { flex-shrink: 0; white-space: nowrap; padding-top: .15rem; }
+.fct-filter-bar {
+    background: var(--fct-surface, #fff);
+    border: 1px solid var(--fct-border, #dfe4e8);
+    border-radius: .6rem;
+    padding: .9rem 1rem;
+}
+
+/* Announcement card on the first slide: blinks when a new announcement exists */
+@keyframes fctBlink {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,179,1,.65); }
+    50%      { box-shadow: 0 0 0 9px rgba(245,179,1,0); }
+}
+.leader-card--announcement.is-new {
+    animation: fctBlink 1.2s ease-in-out infinite;
+    border-color: var(--fct-accent, #f5b301);
+}
+/* Make room for three cards on the first slide */
+.cmt-leaders--sticky {
+    right: 3%;
+    flex-wrap: wrap;
+    max-width: 54%;
+    justify-content: flex-end;
+}
+
+a.fct-team-photo { display: flex; text-decoration: none; }

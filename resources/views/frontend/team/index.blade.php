@@ -38,7 +38,7 @@
 <section class="py-5" aria-label="{{ app()->getLocale() == 'sw' ? 'Timu' : 'Team Members' }}">
     <div class="container">
         <!-- Category Filters -->
-        <nav class="d-flex flex-wrap gap-2 mb-4 justify-content-center" aria-label="{{ app()->getLocale() == 'sw' ? 'Kategoria za Timu' : 'Team Categories' }}">
+        <nav class="d-flex flex-wrap gap-2 mb-5 justify-content-center" aria-label="{{ app()->getLocale() == 'sw' ? 'Kategoria za Timu' : 'Team Categories' }}">
             <a href="{{ route('team.index') }}" class="btn btn-sm {{ !$category ? 'btn-fct-primary' : 'btn-outline-primary' }}">{{ app()->getLocale() == 'sw' ? 'Wote' : 'All' }}</a>
             <a href="{{ route('team.index', ['category' => 'tribunal_member']) }}" class="btn btn-sm {{ $category == 'tribunal_member' ? 'btn-fct-primary' : 'btn-outline-primary' }}">{{ __('messages.tribunal_members') }}</a>
             <a href="{{ route('team.index', ['category' => 'management']) }}" class="btn btn-sm {{ $category == 'management' ? 'btn-fct-primary' : 'btn-outline-primary' }}">{{ __('messages.management') }}</a>
@@ -49,91 +49,43 @@
             $tribunalMembers = $members->where('category', 'tribunal_member');
             $management = $members->where('category', 'management');
             $secretariat = $members->where('category', 'secretariat');
+            $groups = [
+                ['key' => 'tribunal_member', 'title' => __('messages.tribunal_members'), 'items' => $tribunalMembers],
+                ['key' => 'management',      'title' => __('messages.management'),      'items' => $management],
+                ['key' => 'secretariat',     'title' => app()->getLocale() == 'sw' ? 'Utawala' : 'Secretariat', 'items' => $secretariat],
+            ];
         @endphp
 
-        <!-- Tribunal Members -->
-        @if(!$category || $category == 'tribunal_member')
-            @if($tribunalMembers->count() > 0)
-                <h2 class="fct-primary-text mb-4 text-center" style="font-size:1.3rem;">{{ __('messages.tribunal_members') }}</h2>
+        @foreach($groups as $group)
+            @if((!$category || $category == $group['key']) && $group['items']->count() > 0)
+                <h2 class="fct-primary-text mb-4 text-center" style="font-size:1.3rem;">{{ $group['title'] }}</h2>
                 <div class="row g-4 justify-content-center mb-5">
-                    @foreach($tribunalMembers as $member)
-                        <article class="col-lg-4 col-md-6">
-                            <div class="card h-100 border-0 shadow-sm text-center">
-                                <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
-                                        @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
-                                        @else
-                                            <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
-                                        @endif
-                                    </div>
-                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
-                                    @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
+                    @foreach($group['items'] as $member)
+                        <article id="member-{{ $member->id }}" class="col-xl-3 col-lg-4 col-md-6 d-flex">
+                            <div class="fct-team-card">
+                                <a href="{{ route('team.show', $member->id) }}" class="fct-team-photo" role="img" aria-label="{{ $member->getField('name') }}" title="{{ app()->getLocale() == 'sw' ? 'Ona wasifu' : 'View biography' }}">
+                                    @if($member->photo)
+                                        <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" loading="lazy">
+                                    @else
+                                        <i class="bi bi-person-fill" aria-hidden="true"></i>
+                                    @endif
+                                </a>
+                                <div class="fct-team-body">
+                                    <h5><a href="{{ route('team.show', $member->id) }}" class="text-decoration-none" style="color:inherit;">{{ $member->getField('name') }}</a></h5>
+                                    <p class="role">{{ $member->getField('title') }}</p>
+                                    @if($member->getField('designation'))
+                                        <p class="desig">{{ $member->getField('designation') }}</p>
+                                    @endif
+                                    @if($member->email)
+                                        <a class="email" href="mailto:{{ $member->email }}"><i class="bi bi-envelope me-1" aria-hidden="true"></i>{{ $member->email }}</a>
+                                    @endif
                                 </div>
                             </div>
                         </article>
                     @endforeach
                 </div>
             @endif
-        @endif
-
-        <!-- Management -->
-        @if(!$category || $category == 'management')
-            @if($management->count() > 0)
-                <h2 class="fct-primary-text mb-4 text-center" style="font-size:1.3rem;">{{ __('messages.management') }}</h2>
-                <div class="row g-4 justify-content-center mb-5">
-                    @foreach($management as $member)
-                        <article class="col-lg-4 col-md-6">
-                            <div class="card h-100 border-0 shadow-sm text-center">
-                                <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
-                                        @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
-                                        @else
-                                            <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
-                                        @endif
-                                    </div>
-                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
-                                    @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            @endif
-        @endif
-
-        <!-- Secretariat -->
-        @if(!$category || $category == 'secretariat')
-            @if($secretariat->count() > 0)
-                <h2 class="fct-primary-text mb-4 text-center" style="font-size:1.3rem;">{{ app()->getLocale() == 'sw' ? 'Utawala' : 'Secretariat' }}</h2>
-                <div class="row g-4 justify-content-center">
-                    @foreach($secretariat as $member)
-                        <article class="col-lg-4 col-md-6">
-                            <div class="card h-100 border-0 shadow-sm text-center">
-                                <div class="card-body p-4">
-                                    <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:100px;height:100px;background:linear-gradient(135deg,var(--fct-primary),var(--fct-primary-dark));" role="img" aria-label="{{ $member->getField('name') }}">
-                                        @if($member->photo)
-                                            <img src="{{ asset($member->photo) }}" alt="{{ $member->getField('name') }}" class="rounded-circle" style="width:100px;height:100px;object-fit:cover;" loading="lazy">
-                                        @else
-                                            <i class="bi bi-person-fill text-white fs-1" aria-hidden="true"></i>
-                                        @endif
-                                    </div>
-                                    <h5 class="mb-1">{{ $member->getField('name') }}</h5>
-                                    <p class="fct-primary-text mb-2" style="font-size:0.875rem;font-weight:500;">{{ $member->getField('title') }}</p>
-                                    <p class="text-muted" style="font-size:0.8rem;">{{ $member->getField('designation') }}</p>
-                                    @if($member->email)<small class="text-muted d-block"><i class="bi bi-envelope me-1" aria-hidden="true"></i><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></small>@endif
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-            @endif
-        @endif
+        @endforeach
     </div>
 </section>
 @endsection

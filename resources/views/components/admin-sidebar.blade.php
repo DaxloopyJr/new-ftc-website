@@ -78,6 +78,14 @@
                 <i class="bi bi-gear"></i> Settings
             </a>
         </li>
+        @if(\Illuminate\Support\Facades\Route::has('admin.office-locations.index'))
+        <li>
+            <a href="{{ route('admin.office-locations.index') }}" class="{{ request()->routeIs('admin.office-locations.*') ? 'active' : '' }}">
+                <i class="bi bi-geo-alt"></i> Office Locations
+            </a>
+        </li>
+        @endif
+
         <li>
             <a href="{{ route('admin.reports.visitors') }}" class="{{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                 <i class="bi bi-bar-chart"></i> Reports

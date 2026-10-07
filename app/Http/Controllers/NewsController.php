@@ -11,6 +11,13 @@ class NewsController extends Controller
         return view('frontend.news.index', compact('news'));
     }
 
+    public function announcements()
+    {
+        $newsItems = NewsEvent::published()->where('is_announcement', true)
+            ->latest('published_at')->paginate(9);
+        return view('frontend.news.index', ['newsItems' => $newsItems, 'title' => app()->getLocale() == 'sw' ? 'Matangazo' : 'Announcements']);
+    }
+
     public function show($slug)
     {
         $newsItem = NewsEvent::where('slug', $slug)->where('is_published', true)->firstOrFail();

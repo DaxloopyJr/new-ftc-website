@@ -22,6 +22,13 @@
                             <label class="form-label">{{ $setting->label }}</label>
                             @if($setting->type == 'textarea')
                                 <textarea name="settings[{{ $setting->key }}]" class="form-control" rows="3">{{ old('settings.' . $setting->key, $setting->value) }}</textarea>
+                            @elseif($setting->type == 'color')
+                                <input type="color" name="settings[{{ $setting->key }}]" class="form-control form-control-color w-100" value="{{ old('settings.' . $setting->key, $setting->value) }}">
+                            @elseif($setting->type == 'select')
+                                <select name="settings[{{ $setting->key }}]" class="form-select">
+                                    <option value="light" {{ old('settings.' . $setting->key, $setting->value) == 'light' ? 'selected' : '' }}>Light</option>
+                                    <option value="dark" {{ old('settings.' . $setting->key, $setting->value) == 'dark' ? 'selected' : '' }}>Dark</option>
+                                </select>
                             @else
                                 <input type="text" name="settings[{{ $setting->key }}]" class="form-control" value="{{ old('settings.' . $setting->key, $setting->value) }}">
                             @endif

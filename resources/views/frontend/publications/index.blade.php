@@ -59,32 +59,39 @@
             </div>
         </nav>
 
-        <div class="row g-4">
-            @forelse($publications as $pub)
-                <article class="col-lg-4 col-md-6">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body">
-                            <span class="badge" style="background:var(--fct-primary);font-size:0.7rem;">{{ $pub->category_label }}</span>
-                            <h5 class="mt-2 mb-2" style="font-size:1rem;">{{ $pub->getField('title') }}</h5>
-                            <p class="text-muted" style="font-size:0.875rem;">{{ Str::limit($pub->getField('description'), 100) }}</p>
-                            @if($pub->year)<small class="text-muted d-block mb-2">{{ app()->getLocale() == 'sw' ? 'Mwaka' : 'Year' }}: {{ $pub->year }}</small>@endif
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="text-muted" style="font-size:0.75rem;"><i class="bi bi-download me-1" aria-hidden="true"></i>{{ $pub->download_count }} {{ app()->getLocale() == 'sw' ? 'vipakuzi' : 'downloads' }}</span>
-                                <a href="{{ route('publications.download', $pub->slug) }}" class="btn btn-sm btn-fct-primary"><i class="bi bi-download" aria-hidden="true"></i> {{ __('messages.download') }}</a>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-            @empty
-                <div class="col-12 text-center py-5">
-                    <i class="bi bi-inbox fs-1 text-muted" aria-hidden="true"></i>
-                    <p class="text-muted mt-3">{{ __('messages.no_publications') }}</p>
-                </div>
-            @endforelse
+                {{-- Filters --}}
+        <form id="doclist-filters" method="GET" action="{{ route('publications.index') }}" class="fct-filter-bar row g-2 align-items-end mb-4" role="search">
+            @if($category)<input type="hidden" name="category" value="{{ $category }}">@endif
+            <div class="col-md-4">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Tafuta' : 'Search' }}</label>
+                <input type="search" name="q" class="form-control form-control-sm" value="{{ $filters['q'] ?? '' }}" placeholder="{{ app()->getLocale() == 'sw' ? 'Tafuta...' : 'Search...' }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small mb-1">{{ app()->getLocale() == 'sw' ? 'Mwaka' : 'Year' }}</label>
+                <select name="year" class="form-select form-select-sm">
+                    <option value="">{{ app()->getLocale() == 'sw' ? 'Wote' : 'All' }}</option>
+                    @foreach($years as $y)
+                        <option value="{{ $y }}" {{ (string)($filters['year'] ?? '') === (string)$y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-5 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-fct-primary"><i class="bi bi-funnel me-1" aria-hidden="true"></i>{{ app()->getLocale() == 'sw' ? 'Chuja' : 'Filter' }}</button>
+                <a href="{{ route('publications.index', $category ? ['category' => $category] : []) }}" class="btn btn-sm btn-outline-secondary">{{ app()->getLocale() == 'sw' ? 'Futa' : 'Reset' }}</a>
+            </div>
+        </form>
+
+        {{-- Document list (updated via AJAX) --}}
+        <div id="doclist-wrap">
+            @include('frontend.partials.doclist', ['listItems' => $publications, 'listKind' => 'publication'])
         </div>
         <nav class="d-flex justify-content-center mt-4" aria-label="{{ app()->getLocale() == 'sw' ? 'Ukurasa wa machapisho' : 'Publications pagination' }}">
             {{ $publications->links() }}
         </nav>
     </div>
 </section>
+@section('scripts')
+<script src="{{ asset('assets/js/fct-doclist.js') }}"></script>
+@endsection
+
 @endsection

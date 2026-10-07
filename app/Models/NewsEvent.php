@@ -25,6 +25,7 @@ class NewsEvent extends Model
         'event_date',
         'location',
         'location_sw',
+        'is_announcement',
         'is_published',
         'view_count',
         'published_at',
@@ -33,6 +34,7 @@ class NewsEvent extends Model
 
     protected $casts = [
         'is_published' => 'boolean',
+        'is_announcement' => 'boolean',
         'event_date' => 'date',
         'published_at' => 'datetime',
         'view_count' => 'integer',

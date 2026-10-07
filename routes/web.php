@@ -18,6 +18,7 @@ Route::middleware(['track.visitors'])->group(function () {
 	Route::get('/system', [HomeController::class, 'admin'])->name('admin');
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
     Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
+    Route::get('/announcements', [NewsController::class, 'announcements'])->name('announcements.index');
     Route::get('/publications', [PublicationController::class, 'index'])->name('publications.index');
     Route::get('/publications/{slug}', [PublicationController::class, 'show'])->name('publications.show');
     Route::get('/publications/{slug}/download', [PublicationController::class, 'download'])->name('publications.download');
@@ -25,6 +26,7 @@ Route::middleware(['track.visitors'])->group(function () {
     Route::get('/info-library/{slug}', [InfoLibraryController::class, 'show'])->name('info-library.show');
     Route::get('/info-library/{slug}/download', [InfoLibraryController::class, 'download'])->name('info-library.download');
     Route::get('/team', [TeamMemberController::class, 'index'])->name('team.index');
+    Route::get('/team/{id}', [TeamMemberController::class, 'show'])->name('team.show');
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
     Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
